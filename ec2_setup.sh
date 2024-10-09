@@ -13,9 +13,13 @@ conda update conda -y
 conda create -p ~/venv_p39/ python=3.9 -y
 source activate ~/venv_p39/
 pip install fastapi jinja2 uvicorn python-multipart aiofiles requests
+
 git config --global user.name "sonebu"
 git config --global user.email "buraksoner92@gmail.com"
 git clone https://github.com/ghdl/ghdl.git
 mv ghdl/ ghdl-4.0.0/
 cd ghdl-4.0.0/
 git checkout v4.0.0
+cd ~
+git clone https://github.com/gcc-mirror/gcc.git
+git checkout releases/gcc-11.4.0
