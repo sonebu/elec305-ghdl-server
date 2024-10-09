@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style type="text/css">a, a:visited{color: lightskyblue;}</style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>GHDL Server</title>
+        <link rel="icon" href="{{ url_for('static', path='/favicon.png') }}"/>
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    </head>
+    <body style="background-color:black;margin-top:20px;margin-left:20px">
+        <p id="titlepart" style="color:white;">GHDL Server for ELEC 305 @ KU</p><br>
+        <form id="f1", method="post">
+            <label style="color:white;" for="i1">your submission:</label><br>
+            <textarea name="input_text" style="width: 350px; height: 350px; overflow-wrap: break-word;" value="{{ input_text }}"></textarea><br><br>
+            <button type="submit" onclick="submitForm(event)">submit</button><br><br>
+        </form>
+        <p id="i2" style="color:white;">{{ result|safe }}</p>
+        <!--source: https://www.tutorialspoint.com/How-to-submit-an-HTML-form-using-JavaScript --> 
+        <script>
+            var f1 = document.getElementById("f1");
+            var it = document.getElementById("i2");
+            function submitForm(event) {
+                event.preventDefault();
+                f1.submit();
+                i2.innerHTML = "Submitted request, running inference..."
+            }
+        </script>
+    </body>
+</html>
