@@ -5,7 +5,7 @@ sudo swapon /swapfile
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 
 sudo apt-get update
-sudo apt-get install -y zip gnat make libz-dev
+sudo apt-get install -y zip gnat make libz-dev nginx certbot python3-certbot-nginx
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
