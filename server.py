@@ -1,15 +1,7 @@
-import uvicorn, json, enum, time, os, requests, glob
-from typing import Union
-from fastapi import FastAPI, Request, Form, status
-from fastapi.responses import RedirectResponse, HTMLResponse
+import uvicorn, time, os, subprocess
+from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-
-from functions import bl3_wakeup_ytaudioreq_timestrjid, redirect_getlink
-from sources import source_interface_jp2ensrt
-from sources import source_redirect_aid
-
-bl1_url = "https://ghdl.buraksoner.com"
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -32,10 +24,22 @@ def home_post(request: Request, input_text: str = Form("")):
     ### Health checks
     if(input_text == ""):
         output = "enter a non-empty string in the text box"
-        return templates.TemplateResponse('home.html', context={'request': request, 'result': output, 'input_text': input_text})
-
-    ### inputs are OK if we made it this far
-    return templates.TemplateResponse('home.html', context={'request': request, 'result': "OK", 'input_text': input_text})
+    else:
+        ### inputs are OK if we made it this far
+        with open("circ.vhdl", "w") as src:
+            src.write(input_text)
+        ghdl_run_result = subprocess.run(['ghdl', '-a', 'circ.vhdl'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        ghdl_run_result_err = ghdl_run_result.stderr.decode('utf-8')
+        ghdl_run_result_out = ghdl_run_result.stdout.decode('utf-8')
+        print(ghdl_run_result)
+        if(ghdl_run_result_err == ""):
+            output = "No errors."
+        else:
+            output = "GHDL Output:<br>"
+            output += ghdl_run_result_err
+            output += ghdl_run_result_out
+            
+    return templates.TemplateResponse('home.html', context={'request': request, 'result': output, 'input_text': input_text})
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8080, log_level="info", proxy_headers=True, forwarded_allow_ips='*')
