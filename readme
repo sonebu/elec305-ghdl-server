@@ -1,1 +1,25 @@
 https://medium.com/@miketobicarter/adding-a-custom-domain-to-your-aws-ec2-instance-and-securing-it-with-https-c39affde4116
+https://medium.com/@mudasirhaji/how-to-configure-nginx-as-a-reverse-proxy-on-aws-ec2-instance-270736ca2a50
+https://medium.com/@m.fareed607/how-to-set-up-an-nginx-reverse-proxy-server-and-enable-https-with-certbot-bbab9feb6338
+https://stackoverflow.com/questions/15335002/nginx-simple-proxy-pass-to-localhost-not-working
+
+(/home/ubuntu/venv_p39) ubuntu@ip-172-31-35-127:~/elec305-ghdl-server$ sudo certbot --nginx -d ghdl.buraksoner.com
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Requesting a certificate for ghdl.buraksoner.com
+
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/ghdl.buraksoner.com/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/ghdl.buraksoner.com/privkey.pem
+This certificate expires on 2025-01-07.
+These files will be updated when the certificate renews.
+Certbot has set up a scheduled task to automatically renew this certificate in the background.
+
+Deploying certificate
+Successfully deployed certificate for ghdl.buraksoner.com to /etc/nginx/nginx.conf
+Congratulations! You have successfully enabled HTTPS on https://ghdl.buraksoner.com
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+If you like Certbot, please consider supporting our work by:
+ * Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+ * Donating to EFF:                    https://eff.org/donate-le
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
