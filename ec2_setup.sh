@@ -1,5 +1,5 @@
 sudo apt-get update
-sudo apt-get install -y zip
+sudo apt-get install -y zip gnat make
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
@@ -13,3 +13,9 @@ conda update conda -y
 conda create -p ~/venv_p39/ python=3.9 -y
 source activate ~/venv_p39/
 pip install fastapi jinja2 uvicorn python-multipart aiofiles requests
+git config --global user.name "sonebu"
+git config --global user.email "buraksoner92@gmail.com"
+git clone https://github.com/ghdl/ghdl.git
+mv ghdl/ ghdl-4.0.0/
+cd ghdl-4.0.0/
+git checkout v4.0.0
