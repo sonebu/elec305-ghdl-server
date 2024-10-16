@@ -18,7 +18,7 @@ source ~/.bashrc
 conda update conda -y
 conda create -p ~/venv_p39/ python=3.9 -y
 source activate ~/venv_p39/
-pip install fastapi jinja2 uvicorn python-multipart aiofiles requests
+pip install fastapi jinja2 uvicorn python-multipart aiofiles requests jsonlines
 
 cd ~
 git config --global user.name "sonebu"

@@ -5,25 +5,61 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>GHDL Server</title>
-        <link rel="icon" href="{{ url_for('static', path='/favicon.png') }}"/>
+        <link id="favicon" rel="icon" type="image/x-icon" href="static/favicon.png">
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    </head>
+        <script type="module" defer>
+          (async ({ chrome, netscape }) => { if (!chrome && !netscape) await import('https://unpkg.com/@ungap/custom-elements'); 
+            const { default: HighlightedCode } = await import('https://unpkg.com/highlighted-code'); HighlightedCode.useTheme('monokai-sublime'); })(self);
+        </script>
+   </head>
     <body style="background-color:black;margin-top:20px;margin-left:20px">
         <p id="titlepart" style="color:white;">GHDL Server for ELEC 305 @ KU</p><br>
         <form id="f1", method="post">
-            <label style="color:white;" for="i1">your submission:</label><br>
-            <textarea name="input_text" style="width: 350px; height: 350px; overflow-wrap: break-word;" value="{{ input_text }}"></textarea><br><br>
+            <label style="color:white;" for="email">KU Email:</label>
+            <input type="email" id="email" name="email"><br><br>
+
+            <label style="color:white;" for="pwd">Password:</label>
+            <input type="password" id="pwd" name="pwd"><br><br><br>
+
+            <!-- source: https://stackoverflow.com/a/76893887/3811558   and   https://www.npmjs.com/package/highlighted-code -->
+            <label style="color:white;" for="i1">VHDL Code:</label><br><br>
+            <textarea id="input_text" is="highlighted-code" spellcheck="false" autocorrect="off" autocapitalize="off"
+                      language="vhdl" tab-size="2" name="input_text" style="width: 320px; height: 400px;" value="{{ input_text }}"></textarea>
+            <br><br>
+
             <button type="submit" onclick="submitForm(event)">submit</button><br><br>
         </form>
         <p id="i2" style="color:white;">{{ result|safe }}</p>
         <!--source: https://www.tutorialspoint.com/How-to-submit-an-HTML-form-using-JavaScript --> 
         <script>
-            var f1 = document.getElementById("f1");
-            var it = document.getElementById("i2");
+            // Load saved data from local storage
+            document.addEventListener("DOMContentLoaded", function() {
+              const mem_pwd = localStorage.getItem("pwd");
+              if (mem_pwd) document.getElementById("pwd").value = mem_pwd;
+              
+              const mem_email = localStorage.getItem("email");
+              if (mem_email) document.getElementById("email").value = mem_email;
+              
+              const mem_input_text = localStorage.getItem("input_text");
+              if (mem_input_text) document.getElementById("input_text").value = mem_input_text;
+            });
+
+            var f1    = document.getElementById("f1");
+            var i2    = document.getElementById("i2");
             function submitForm(event) {
                 event.preventDefault();
+                
+                const mem_pwd = document.getElementById("pwd").value;
+                localStorage.setItem("pwd", mem_pwd);
+                
+                const mem_email = document.getElementById("email").value;
+                localStorage.setItem("email", mem_email);
+                
+                const mem_input_text = document.getElementById("input_text").value;
+                localStorage.setItem("input_text", mem_input_text);
+                
                 f1.submit();
-                i2.innerHTML = "Submitted request, running inference..."
+                i2.innerHTML = "Submitted request..."
             }
         </script>
     </body>
