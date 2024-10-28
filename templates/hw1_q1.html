@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style type="text/css">a, a:visited{color: lightskyblue;}</style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>HW1 - Q1 - ELEC 305 </title>
+        <link id="favicon" rel="icon" type="image/x-icon" href="static/favicon.png">
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+        <script type="module" defer>
+          (async ({ chrome, netscape }) => { if (!chrome && !netscape) await import('https://unpkg.com/@ungap/custom-elements'); 
+            const { default: HighlightedCode } = await import('https://unpkg.com/highlighted-code'); HighlightedCode.useTheme('monokai-sublime'); })(self);
+        </script>
+        <style>
+            table {color:white; font-family: monospace; border-collapse: collapse;}
+            td, th {border: 1px solid #dddddd; text-align: center; padding: 8px;}
+        </style>
+   </head>
+    <body style="background-color:black;margin-top:20px;margin-left:20px">
+        <p id="titlepart" style="color:white; font-size:20px;">HW1 - Q1 - ELEC 305</p>
+        <p id="explnpart" style="color:white; font-family: monospace;">Please enter your username and password below before submitting.</p><br>
+        <form id="qform" onsubmit="submitform(event)" method="post">
+            <label style="color:white; font-family: monospace;" for="username">ELEC 305 username:</label> <input type="text" id="username" name="username"><br>
+            <label style="color:white; font-family: monospace;" for="password">ELEC 305 password:</label> <input type="password" id="password" name="password"><br>
+
+            <br>
+            <hr> <!-- ----------------------------------------------------------------------------------------------------------------------------------------- --> 
+            <br>
+            
+            <label style="color:white; font-family: monospace;" for="p0"><b>Question 1)</b> Describe a very simple VHDL circuit that takes a 1-bit signal called A as input, 
+                <br>and just connects that to a 1-bit output signal named B.
+
+            </label>
+            <br><br>
+
+            <label style="color:white; font-family: monospace;" for="p1">Make sure you keep the signal names *exactly* the same in your circuit,</label><br>
+            <label style="color:white; font-family: monospace;" for="p2">and don't forget that this has to be a fully functioning circuit (entity, ports, architecture, ...).</label><br>
+            <label style="color:white; font-family: monospace;" for="p3">Your VHDL:</label><br><br>
+
+            <textarea id="input_text" is="highlighted-code" spellcheck="false" autocorrect="off" autocapitalize="off"
+                      language="vhdl" tab-size="2" name="input_text" style="width: 600px; height: 300px;" value="{{ input_text }}"></textarea>
+            <br><br>
+            <button type="submit" id="qbutton">Submit</button>
+            <p id="qout" style="color:white;">{{ qout|safe }}</p>
+            <br><br>
+        </form>
+        <script>
+            // Load saved data from local storage
+            document.addEventListener("DOMContentLoaded", function() {
+              const mem_password = localStorage.getItem("password");
+              if (mem_password) document.getElementById("password").value = mem_password;
+              
+              const mem_username = localStorage.getItem("username");
+              if (mem_username) document.getElementById("username").value = mem_username;
+              
+              const mem_input_text = localStorage.getItem("input_text");
+              if (mem_input_text) document.getElementById("input_text").value = mem_input_text;
+            });
+            
+            var qform = document.getElementById("qform");
+            var qout  = document.getElementById("qout");
+            function submitform(event) {
+                event.preventDefault();
+                
+                const mem_password = document.getElementById("password").value;
+                localStorage.setItem("password", mem_password);
+                
+                const mem_username = document.getElementById("username").value;
+                localStorage.setItem("username", mem_username);
+                
+                const mem_input_text = document.getElementById("input_text").value;
+                localStorage.setItem("input_text", mem_input_text);
+
+                qform.submit();
+                qout.innerHTML = "Submitted request..."
+            }
+        </script>
+    </body>
+</html>
