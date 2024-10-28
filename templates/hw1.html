@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style type="text/css">a, a:visited{color: lightskyblue;}</style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>HW 1 - ELEC 305 </title>
+        <link id="favicon" rel="icon" type="image/x-icon" href="static/favicon.png">
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+        <script type="module" defer>
+          (async ({ chrome, netscape }) => { if (!chrome && !netscape) await import('https://unpkg.com/@ungap/custom-elements'); 
+            const { default: HighlightedCode } = await import('https://unpkg.com/highlighted-code'); HighlightedCode.useTheme('monokai-sublime'); })(self);
+        </script>
+        <style>
+            table {color:white; font-family: monospace; border-collapse: collapse;}
+            td, th {border: 1px solid #dddddd; text-align: center; padding: 8px;}
+        </style>
+   </head>
+    <body style="background-color:black;margin-top:20px;margin-left:20px">
+        <p id="titlepart" style="color:white; font-size:20px;">HW 1 - ELEC 305</p>
+        <p id="explnpart" style="color:white; font-family: monospace;">Please enter your username and password below before starting. <br>None of the buttons below will work if those aren't correct.</p><br>
+        <form id="q1" action="/q1form" method="post">
+            <label style="color:white; font-family: monospace;" for="email">KU Email:</label>
+            <input type="email" id="email" name="email"><br>
+            <label style="color:white; font-family: monospace;" for="pwd"  >Password:</label>
+            <input type="password" id="pwd" name="pwd"><br><br><br>
+
+            <label style="color:white; font-family: monospace;" for="q1p0"><b>Question 1)</b> Describe a circuit in VHDL that takes three 1-bit signals as input, 
+                <br>namely A, B and C, and produces two 1-bit signals named D and E. 
+                <br>The truth table from A,B,C to D,E is as follows: </label><br><br>
+
+            <table>
+            <tr> <th>input A</th> <th>input B</th> <th>input C</th> <th>output D</th> <th>output E</th> </tr>
+            <tr> <td>0</td> <td>0</td> <td>0</td> <td>0</td> <td>0</td> </tr>
+            <tr> <td>0</td> <td>0</td> <td>1</td> <td>1</td> <td>0</td> </tr>
+            <tr> <td>0</td> <td>1</td> <td>0</td> <td>1</td> <td>0</td> </tr>
+            <tr> <td>0</td> <td>1</td> <td>1</td> <td>0</td> <td>1</td> </tr>
+            <tr> <td>1</td> <td>0</td> <td>0</td> <td>1</td> <td>0</td> </tr>
+            <tr> <td>1</td> <td>0</td> <td>1</td> <td>0</td> <td>1</td> </tr>
+            <tr> <td>1</td> <td>1</td> <td>0</td> <td>0</td> <td>1</td> </tr>
+            <tr> <td>1</td> <td>1</td> <td>1</td> <td>1</td> <td>1</td> </tr>
+            </table><br>
+
+            <label style="color:white; font-family: monospace;" for="q1p1">Make sure you keep the signal names *exactly* the same in your circuit,</label><br>
+            <label style="color:white; font-family: monospace;" for="q1p1">and don't forget that this has to be a fully functioning circuit (entity, ports, architecture, ...).</label><br>
+            <label style="color:white; font-family: monospace;" for="q1p2">Your VHDL:</label><br><br>
+
+            <textarea id="q1_input_text" is="highlighted-code" spellcheck="false" autocorrect="off" autocapitalize="off"
+                      language="vhdl" tab-size="2" name="q1_input_text" style="width: 600px; height: 300px;" value="{{ q1_input_text }}"></textarea>
+            <br><br>
+        </form>
+        <button type="submit" id="testSyntaxButton" onclick="testSyntax(event)">Test Syntax</button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <button type="submit" id="testImplementationButton" onclick="testImplementation(event)">Test Implementation</button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <button type="submit" id="submissionButton" onclick="submission(event)">Submit Implementation</button>
+        <br><br>
+        <p id="q1_output" style="color:white;">{{ result|safe }}</p>
+        <!--source: https://www.tutorialspoint.com/How-to-submit-an-HTML-form-using-JavaScript --> 
+        <script>
+            // Load saved data from local storage
+            document.addEventListener("DOMContentLoaded", function() {
+              const mem_pwd = localStorage.getItem("pwd");
+              if (mem_pwd) document.getElementById("pwd").value = mem_pwd;
+              
+              const mem_email = localStorage.getItem("email");
+              if (mem_email) document.getElementById("email").value = mem_email;
+              
+              const mem_q1_input_text = localStorage.getItem("q1_input_text");
+              if (mem_q1_input_text) document.getElementById("q1_input_text").value = mem_q1_input_text;
+            });
+
+            var q1        = document.getElementById("q1");
+            var q1_output = document.getElementById("q1_output");
+            function testSyntax(event) {
+                event.preventDefault();
+                
+                const mem_pwd = document.getElementById("pwd").value;
+                localStorage.setItem("pwd", mem_pwd);
+                
+                const mem_email = document.getElementById("email").value;
+                localStorage.setItem("email", mem_email);
+                
+                const mem_input_text = document.getElementById("input_text").value;
+                localStorage.setItem("input_text", mem_input_text);
+                
+                q1.submit();
+                q1_output.innerHTML = "Submitted request..."
+            }
+        </script>
+    </body>
+</html>

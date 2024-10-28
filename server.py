@@ -1,21 +1,35 @@
-import uvicorn, time, os, subprocess, jsonlines
+import uvicorn, time, os, subprocess, jsonlines, enum
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
+base_url = "https://ghdl.buraksoner.com"
+
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory='templates')
+
+# not sure if this is necessary
+@app.get("/health_check", status_code=200)
+def health_check(request:Request):
+    return "Healthy"
+
+class hwChoices(str, enum.Enum):
+    hw1 = "HW1"
+    
+@app.post('/')
+def home_post(request: Request, hw_selection: hwChoices = Form(hwChoices)):
+    hw_name = hw_selection.name
+    redirect_url = base_url + "/" + hw_name
+    return RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
 
 @app.get("/")
 def home_get(request: Request):
     result = 'submit your vhdl code'
     return templates.TemplateResponse('home.html', context={'request': request})
 
-@app.get("/health_check", status_code=200)
-def health_check(request:Request):
-    return "Healthy"
 
+"""
 @app.post('/')
 def home_post(request: Request, pwd: str = Form(""), email: str = Form(""), input_text: str = Form("")):
     timestr  = time.strftime("%Y%m%d_%H%M%S")
@@ -61,6 +75,7 @@ def home_post(request: Request, pwd: str = Form(""), email: str = Form(""), inpu
                     dbg.write(output)
             
     return templates.TemplateResponse('home.html', context={'request': request, 'result': output, 'input_text': input_text})
+"""
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8080, log_level="info", proxy_headers=True, forwarded_allow_ips='*')
