@@ -10,11 +10,6 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory='templates')
 
-# not sure if this is necessary
-@app.get("/health_check", status_code=200)
-def health_check(request:Request):
-    return "Healthy"
-
 class hwChoices(str, enum.Enum):
     hw1 = "HW1"
     
@@ -29,7 +24,7 @@ def home_get(request: Request):
     return templates.TemplateResponse('home.html', context={'request': request})
 
 @app.get("/hw1")
-def home_get(request: Request):
+def hw1_get(request: Request):
     return templates.TemplateResponse('hw1.html', context={'request': request})
 
 def inputchecks(username, password, input_text):
@@ -53,8 +48,13 @@ def inputchecks(username, password, input_text):
         else:
             return 0
 
+@app.get("/hw1_q1")
+def hw1_q1_get(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form("")):
+    output = "..."
+    return templates.TemplateResponse('hw1_q1.html', context={'request': request, 'input_text': input_text, 'qout': output})
+
 @app.post('/hw1_q1')
-async def home_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form("")):
+def hw1_q1_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form("")):
     timestr  = time.strftime("%Y%m%d_%H%M%S")
     clientIP = request.client.host
 
@@ -83,7 +83,7 @@ async def home_post(request: Request, password: str = Form(""), username: str = 
     else:
         output = msg
 
-    return templates.TemplateResponse('hw1.html', context={'request': request, 'input_text': input_text, 'qout': output})
+    return templates.TemplateResponse('hw1_q1.html', context={'request': request, 'input_text': input_text, 'qout': output})
 
 if __name__ == "__main__":
     uvicorn.run("server:app", host="0.0.0.0", port=8080, log_level="info", proxy_headers=True, reload=True, forwarded_allow_ips='*')
