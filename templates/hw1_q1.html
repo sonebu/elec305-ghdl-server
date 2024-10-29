@@ -53,10 +53,10 @@
         <hr> <!-- ----------------------------------------------------------------------------------------------------------------------------------------- --> 
         
         <p id="links" style="color:white;">Links to other questions in HW 1</p>
-        <label id="titlepart" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q2" target="_blank">Question 2</a></label><br>
-        <label id="titlepart" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q3" target="_blank">Question 3</a></label><br>
-        <label id="titlepart" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q4" target="_blank">Question 4</a></label><br>
-        <label id="titlepart" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q5" target="_blank">Question 5</a></label><br>
+        <label id="titlepart2" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q2" target="_blank">Question 2</a></label><br>
+        <label id="titlepart3" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q3" target="_blank">Question 3</a></label><br>
+        <label id="titlepart4" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q4" target="_blank">Question 4</a></label><br>
+        <label id="titlepart5" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q5" target="_blank">Question 5</a></label><br>
 
         <script>
             // Load saved data from local storage
@@ -67,8 +67,8 @@
               const mem_username = localStorage.getItem("username");
               if (mem_username) document.getElementById("username").value = mem_username;
               
-              const mem_input_text = localStorage.getItem("input_text");
-              if (mem_input_text) document.getElementById("input_text").value = mem_input_text;
+              const mem_input_text_hw1_q1 = localStorage.getItem("input_text");
+              if (mem_input_text_hw1_q1) document.getElementById("input_text").value = mem_input_text_hw1_q1;
             });
 
             function setButtonAction(value) {
@@ -86,8 +86,8 @@
                 const mem_username = document.getElementById("username").value;
                 localStorage.setItem("username", mem_username);
                 
-                const mem_input_text = document.getElementById("input_text").value;
-                localStorage.setItem("input_text", mem_input_text);
+                const mem_input_text_hw1_q1 = document.getElementById("input_text").value;
+                localStorage.setItem("input_text", mem_input_text_hw1_q1);
 
                 qform.submit();
                 qout.innerHTML = "Submitted request..."
