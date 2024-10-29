@@ -4,7 +4,7 @@
         <style type="text/css">a, a:visited{color: lightskyblue;}</style>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>HW1 - Q1 - ELEC 305 </title>
+        <title>Q1 - HW1 - ELEC 305 </title>
         <link id="favicon" rel="icon" type="image/x-icon" href="static/favicon.png">
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
         <script type="module" defer>
@@ -28,22 +28,36 @@
             <br>
             
             <label style="color:white; font-family: monospace;" for="p0"><b>Question 1)</b> Describe a very simple VHDL circuit that takes a 1-bit signal called A as input, 
-                <br>and just connects that to a 1-bit output signal named B.
+                <br>and just connects that to a 1-bit output signal named B. Use the <font color="#2473c7"><b>std_logic</b></font> data type.
 
             </label>
             <br><br>
 
-            <label style="color:white; font-family: monospace;" for="p1">Make sure you keep the signal names *exactly* the same in your circuit,</label><br>
-            <label style="color:white; font-family: monospace;" for="p2">and don't forget that this has to be a fully functioning circuit (entity, ports, architecture, ...).</label><br>
-            <label style="color:white; font-family: monospace;" for="p3">Your VHDL:</label><br><br>
+            <label style="color:white; font-family: monospace;" for="p1">- Make sure you keep the signal names *exactly* the same in your circuit,</label><br>
+            <label style="color:white; font-family: monospace;" for="p2">- Don't forget that this has to be a fully functioning circuit (entity, ports, architecture, ...).</label><br>
+            <label style="color:white; font-family: monospace;" for="p3">- The entity name needs to be <font color="#2473c7"><b>hw1_q1</b></font> for the server to be able to check your results.</label><br><br>
+            <label style="color:white; font-family: monospace;" for="p4">Your VHDL:</label><br><br>
 
             <textarea id="input_text" is="highlighted-code" spellcheck="false" autocorrect="off" autocapitalize="off"
                       language="vhdl" tab-size="2" name="input_text" style="width: 600px; height: 300px;" value="{{ input_text }}"></textarea>
             <br><br>
-            <button type="submit" id="qbutton">Submit</button>
+            <input type="hidden" id="buttonaction" name="buttonaction" value="">
+            <input type="submit" name="buttonaction" value="Check Syntax" onclick="setButtonAction('Check Syntax')">&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="submit" name="buttonaction" value="Check Functionality" onclick="setButtonAction('Check Functionality')">&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="submit" name="buttonaction" value="Submit Answer" onclick="setButtonAction('Submit Answer')">
             <p id="qout" style="color:white;">{{ qout|safe }}</p>
-            <br><br>
+            <br>
         </form>
+
+        <br>
+        <hr> <!-- ----------------------------------------------------------------------------------------------------------------------------------------- --> 
+        
+        <p id="links" style="color:white;">Links to other questions in HW 1</p>
+        <label id="titlepart" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q2" target="_blank">Question 2</a></label><br>
+        <label id="titlepart" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q3" target="_blank">Question 3</a></label><br>
+        <label id="titlepart" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q4" target="_blank">Question 4</a></label><br>
+        <label id="titlepart" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q5" target="_blank">Question 5</a></label><br>
+
         <script>
             // Load saved data from local storage
             document.addEventListener("DOMContentLoaded", function() {
@@ -56,7 +70,11 @@
               const mem_input_text = localStorage.getItem("input_text");
               if (mem_input_text) document.getElementById("input_text").value = mem_input_text;
             });
-            
+
+            function setButtonAction(value) {
+                document.getElementById("buttonaction").value = value;
+            } 
+                       
             var qform = document.getElementById("qform");
             var qout  = document.getElementById("qout");
             function submitform(event) {
