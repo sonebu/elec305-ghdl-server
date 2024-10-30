@@ -4,7 +4,7 @@
         <style type="text/css">a, a:visited{color: lightskyblue;}</style>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Q1 - HW1 - ELEC 305 </title>
+        <title>Q4 - HW1 - ELEC 305 </title>
         <link id="favicon" rel="icon" type="image/x-icon" href="static/favicon.png">
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
         <script type="module" defer>
@@ -17,7 +17,7 @@
         </style>
    </head>
     <body style="background-color:black;margin-top:20px;margin-left:20px">
-        <p id="titlepart" style="color:white; font-size:20px;">HW1 - Q1 - ELEC 305</p>
+        <p id="titlepart" style="color:white; font-size:20px;">HW1 - Q4 - ELEC 305</p>
         <p id="explnpart" style="color:white; font-family: monospace;">Please enter your username and password below before submitting.</p><br>
         <form id="qform" onsubmit="submitform(event)" method="post">
             <label style="color:white; font-family: monospace;" for="username">ELEC 305 username:</label> <input type="text" id="username" name="username"><br>
@@ -27,17 +27,23 @@
             <hr> <!-- ----------------------------------------------------------------------------------------------------------------------------------------- --> 
             <br>
             
-            <label style="color:white; font-family: monospace;" for="p0"><b>Question 1)</b> Describe a very simple VHDL circuit that takes a 1-bit signal called A as input, 
-                <br>and just connects that to a 1-bit output signal named B. Use the <font color="#2473c7"><b>std_logic</b></font> data type.
-
+            <label style="color:white; font-family: monospace;" for="p0"><b>Question 4)</b> Describe a simple VHDL circuit that takes a 2-bit vector called A as input, 
+                <br>and drives a 3-bit output named B with the truth table given below. Use the <font color="#2473c7"><b>std_logic_vector</b></font> data type.
             </label>
             <br><br>
+            <table>
+            <tr> <th>A(0)</th> <th>A(1)</th> <th>B(0)</th> <th>B(1)</th> <th>B(2)</th> </tr>
+            <tr> <td>0</td>    <td>0</td>    <td>0</td>    <td>0</td>    <td>0</td> </tr>
+            <tr> <td>0</td>    <td>1</td>    <td>0</td>    <td>1</td>    <td>1</td> </tr>
+            <tr> <td>1</td>    <td>0</td>    <td>0</td>    <td>1</td>    <td>1</td> </tr>
+            <tr> <td>1</td>    <td>1</td>    <td>1</td>    <td>1</td>    <td>0</td> </tr>
+            </table><br>
 
-            <label style="color:white; font-family: monospace;" for="p1">- Signal/port names must be *exactly* the same as in the question, and entity name must be <font color="#2473c7"><b>hw1_q1</b></font>.</label><br>
-            <label style="color:white; font-family: monospace;" for="p2">- You can check the server testbench for this question at <a class="ulink" href="https://ghdl.buraksoner.com/testbenches/hw1_q1_tb.vhdl" target="_blank">testbenches/hw1_q1_tb.vhdl</a>.</label><br><br>
+            <label style="color:white; font-family: monospace;" for="p1">- Signal/port names must be *exactly* the same as in the question, and entity name must be <font color="#2473c7"><b>hw1_q4</b></font>.</label><br>
+            <label style="color:white; font-family: monospace;" for="p2">- You can check the server testbench for this question at <a class="ulink" href="https://ghdl.buraksoner.com/testbenches/hw1_q4_tb.vhdl" target="_blank">testbenches/hw1_q4_tb.vhdl</a>.</label><br><br>
             <label style="color:white; font-family: monospace;" for="p3">Your VHDL:</label><br><br>
 
-            <textarea id="input_text_hw1_q1" is="highlighted-code" spellcheck="false" autocorrect="off" autocapitalize="off"
+            <textarea id="input_text_hw1_q4" is="highlighted-code" spellcheck="false" autocorrect="off" autocapitalize="off"
                       language="vhdl" tab-size="2" name="input_text" style="width: 600px; height: 300px;" value="{{ input_text }}"></textarea>
             <br><br>
             <input type="hidden" id="buttonaction" name="buttonaction" value="">
@@ -51,10 +57,10 @@
         <br>
         <hr> <!-- ----------------------------------------------------------------------------------------------------------------------------------------- --> 
         
-        <p id="links" style="color:white;">Links to other questions in HW 1</p>
+        <p id="links" style="color:white;">Links to other questions in HW1</p>
+        <label id="titlepart1" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q1" target="_blank">Question 1</a></label><br>
         <label id="titlepart2" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q2" target="_blank">Question 2</a></label><br>
         <label id="titlepart3" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q3" target="_blank">Question 3</a></label><br>
-        <label id="titlepart4" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q4" target="_blank">Question 4</a></label><br>
         <label id="titlepart5" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q5" target="_blank">Question 5</a></label><br>
 
         <script>
@@ -66,8 +72,8 @@
               const mem_username = localStorage.getItem("username");
               if (mem_username) document.getElementById("username").value = mem_username;
               
-              const mem_input_text_hw1_q1 = localStorage.getItem("input_text_hw1_q1");
-              if (mem_input_text_hw1_q1) document.getElementById("input_text_hw1_q1").value = mem_input_text_hw1_q1;
+              const mem_input_text_hw1_q4 = localStorage.getItem("input_text_hw1_q4");
+              if (mem_input_text_hw1_q4) document.getElementById("input_text_hw1_q4").value = mem_input_text_hw1_q4;
             });
 
             function setButtonAction(value) {
@@ -85,8 +91,8 @@
                 const mem_username = document.getElementById("username").value;
                 localStorage.setItem("username", mem_username);
                 
-                const mem_input_text_hw1_q1 = document.getElementById("input_text_hw1_q1").value;
-                localStorage.setItem("input_text_hw1_q1", mem_input_text_hw1_q1);
+                const mem_input_text_hw1_q4 = document.getElementById("input_text_hw1_q4").value;
+                localStorage.setItem("input_text_hw1_q4", mem_input_text_hw1_q4);
 
                 qform.submit();
                 qout.innerHTML = "Submitted request..."

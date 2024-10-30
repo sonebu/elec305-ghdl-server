@@ -8,6 +8,7 @@ base_url = "https://ghdl.buraksoner.com"
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/testbenches", StaticFiles(directory="testbenches", html = True), name="testbenches")
 templates = Jinja2Templates(directory='templates')
     
 ###################################################################################################################################################################
@@ -87,6 +88,41 @@ def hw1_q2_post(request: Request, password: str = Form(""), username: str = Form
                                 username = username, password = password, input_text = input_text, buttonaction = buttonaction);
     return templates.TemplateResponse('hw1_q2.html', context={'request': request, 'input_text': input_text, 'qout': output})
 
+### HW1 - Q3
+@app.get("/hw1_q3")
+def hw1_q3_get(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
+    return templates.TemplateResponse('hw1_q3.html', context={'request': request, 'input_text': input_text, 'qout': "..."})
+
+@app.post('/hw1_q3')
+def hw1_q3_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
+    output = handle_hw_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+                                hw_tag   = 'hw1', question_tag = 'q3', testbench_tag = 'hw1_q3_tb.vhdl', # put it under ./testbenches/
+                                username = username, password = password, input_text = input_text, buttonaction = buttonaction);
+    return templates.TemplateResponse('hw1_q3.html', context={'request': request, 'input_text': input_text, 'qout': output})
+
+### HW1 - Q4
+@app.get("/hw1_q4")
+def hw1_q4_get(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
+    return templates.TemplateResponse('hw1_q4.html', context={'request': request, 'input_text': input_text, 'qout': "..."})
+
+@app.post('/hw1_q4')
+def hw1_q4_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
+    output = handle_hw_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+                                hw_tag   = 'hw1', question_tag = 'q4', testbench_tag = 'hw1_q4_tb.vhdl', # put it under ./testbenches/
+                                username = username, password = password, input_text = input_text, buttonaction = buttonaction);
+    return templates.TemplateResponse('hw1_q4.html', context={'request': request, 'input_text': input_text, 'qout': output})
+
+### HW1 - Q5
+@app.get("/hw1_q5")
+def hw1_q5_get(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
+    return templates.TemplateResponse('hw1_q5.html', context={'request': request, 'input_text': input_text, 'qout': "..."})
+
+@app.post('/hw1_q5')
+def hw1_q5_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
+    output = handle_hw_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+                                hw_tag   = 'hw1', question_tag = 'q5', testbench_tag = 'hw1_q5_tb.vhdl', # put it under ./testbenches/
+                                username = username, password = password, input_text = input_text, buttonaction = buttonaction);
+    return templates.TemplateResponse('hw1_q5.html', context={'request': request, 'input_text': input_text, 'qout': output})
 
 ###################################################################################################################################################################
 ### Helper Functions
@@ -191,6 +227,7 @@ def handle_hw_question(timestr, clientIP, hw_tag, question_tag, testbench_tag, u
                 output += 'You already have an <font color="#168233"><b>accepted and saved</b></font> submission, so you cannot make a new submission.<br>'
                 output += 'However, you can still test alternatives with "Check Syntax" and "Check Functionality" if you want to.<br>'
                 output += 'Double-check your submission status from: <a class="ulink" href="https://ghdl.buraksoner.com/checksubmissions" target="_blank">https://ghdl.buraksoner.com/checksubmissions</a><br>'
+                output += "</pre>"
             else:
                 syntax_output = syntax_check(submission_foldername, vhdl_filename, submission_id)
                 output = '<pre style="background-color:black; color:white; font-family:monospace">'

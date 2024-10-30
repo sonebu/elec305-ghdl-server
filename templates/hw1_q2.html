@@ -33,12 +33,11 @@
             </label>
             <br><br>
 
-            <label style="color:white; font-family: monospace;" for="p1">- Make sure you keep the signal names *exactly* the same in your circuit,</label><br>
-            <label style="color:white; font-family: monospace;" for="p2">- Don't forget that this has to be a fully functioning circuit (entity, ports, architecture, ...).</label><br>
-            <label style="color:white; font-family: monospace;" for="p3">- The entity name needs to be <font color="#2473c7"><b>hw1_q2</b></font> for the server to be able to check your results.</label><br><br>
-            <label style="color:white; font-family: monospace;" for="p4">Your VHDL:</label><br><br>
+            <label style="color:white; font-family: monospace;" for="p1">- Signal/port names must be *exactly* the same as in the question, and entity name must be <font color="#2473c7"><b>hw1_q2</b></font>.</label><br>
+            <label style="color:white; font-family: monospace;" for="p2">- You can check the server testbench for this question at <a class="ulink" href="https://ghdl.buraksoner.com/testbenches/hw1_q2_tb.vhdl" target="_blank">testbenches/hw1_q2_tb.vhdl</a>.</label><br><br>
+            <label style="color:white; font-family: monospace;" for="p3">Your VHDL:</label><br><br>
 
-            <textarea id="input_text" is="highlighted-code" spellcheck="false" autocorrect="off" autocapitalize="off"
+            <textarea id="input_text_hw1_q2" is="highlighted-code" spellcheck="false" autocorrect="off" autocapitalize="off"
                       language="vhdl" tab-size="2" name="input_text" style="width: 600px; height: 300px;" value="{{ input_text }}"></textarea>
             <br><br>
             <input type="hidden" id="buttonaction" name="buttonaction" value="">
@@ -67,8 +66,8 @@
               const mem_username = localStorage.getItem("username");
               if (mem_username) document.getElementById("username").value = mem_username;
               
-              const mem_input_text_hw1_q2 = localStorage.getItem("input_text");
-              if (mem_input_text_hw1_q2) document.getElementById("input_text").value = mem_input_text_hw1_q2;
+              const mem_input_text_hw1_q2 = localStorage.getItem("input_text_hw1_q2");
+              if (mem_input_text_hw1_q2) document.getElementById("input_text_hw1_q2").value = mem_input_text_hw1_q2;
             });
 
             function setButtonAction(value) {
@@ -86,8 +85,8 @@
                 const mem_username = document.getElementById("username").value;
                 localStorage.setItem("username", mem_username);
                 
-                const mem_input_text_hw1_q2 = document.getElementById("input_text").value;
-                localStorage.setItem("input_text", mem_input_text_hw1_q2);
+                const mem_input_text_hw1_q2 = document.getElementById("input_text_hw1_q2").value;
+                localStorage.setItem("input_text_hw1_q2", mem_input_text_hw1_q2);
 
                 qform.submit();
                 qout.innerHTML = "Submitted request..."
