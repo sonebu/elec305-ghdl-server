@@ -4,62 +4,26 @@
         <style type="text/css">a, a:visited{color: lightskyblue;}</style>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>GHDL Server</title>
+        <title>HW Server - ELEC 305</title>
         <link id="favicon" rel="icon" type="image/x-icon" href="static/favicon.png">
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-        <script type="module" defer>
-          (async ({ chrome, netscape }) => { if (!chrome && !netscape) await import('https://unpkg.com/@ungap/custom-elements'); 
-            const { default: HighlightedCode } = await import('https://unpkg.com/highlighted-code'); HighlightedCode.useTheme('monokai-sublime'); })(self);
-        </script>
    </head>
     <body style="background-color:black;margin-top:20px;margin-left:20px">
-        <p id="titlepart" style="color:white;">GHDL Server for ELEC 305 @ KU</p><br>
+        <p id="titlepart" style="color:white; font-size:20px;">HW Server for ELEC 305 @ KU</p>
         <form id="f1", method="post">
-            <label style="color:white;" for="email">KU Email:</label>
-            <input type="email" id="email" name="email"><br><br>
-
-            <label style="color:white;" for="pwd">Password:</label>
-            <input type="password" id="pwd" name="pwd"><br><br><br>
-
-            <!-- source: https://stackoverflow.com/a/76893887/3811558   and   https://www.npmjs.com/package/highlighted-code -->
-            <label style="color:white;" for="i1">VHDL Code:</label><br><br>
-            <textarea id="input_text" is="highlighted-code" spellcheck="false" autocorrect="off" autocapitalize="off"
-                      language="vhdl" tab-size="2" name="input_text" style="width: 320px; height: 400px;" value="{{ input_text }}"></textarea>
+            <label style="color:white;" for="demo_selection">Select HW #:</label><br>
+            <select id="hw_selection_dropdown" name="hw_selection">
+                <option value="HW1"     >HW 1</option>
+            </select>
             <br><br>
-
-            <button type="submit" onclick="submitForm(event)">submit</button><br><br>
+            <button type="submit" onclick="submitForm(event)">Navigate to HW</button><br><br>
         </form>
-        <p id="i2" style="color:white;">{{ result|safe }}</p>
-        <!--source: https://www.tutorialspoint.com/How-to-submit-an-HTML-form-using-JavaScript --> 
+        <label id="titlepart6" style="color:white;"><a class="ulink" href="https://ghdl.buraksoner.com/checksubmissions" target="_blank">Check submission states here</a></label><br>
         <script>
-            // Load saved data from local storage
-            document.addEventListener("DOMContentLoaded", function() {
-              const mem_pwd = localStorage.getItem("pwd");
-              if (mem_pwd) document.getElementById("pwd").value = mem_pwd;
-              
-              const mem_email = localStorage.getItem("email");
-              if (mem_email) document.getElementById("email").value = mem_email;
-              
-              const mem_input_text = localStorage.getItem("input_text");
-              if (mem_input_text) document.getElementById("input_text").value = mem_input_text;
-            });
-
-            var f1    = document.getElementById("f1");
-            var i2    = document.getElementById("i2");
+            var apiform = document.getElementById("f1");
             function submitForm(event) {
                 event.preventDefault();
-                
-                const mem_pwd = document.getElementById("pwd").value;
-                localStorage.setItem("pwd", mem_pwd);
-                
-                const mem_email = document.getElementById("email").value;
-                localStorage.setItem("email", mem_email);
-                
-                const mem_input_text = document.getElementById("input_text").value;
-                localStorage.setItem("input_text", mem_input_text);
-                
-                f1.submit();
-                i2.innerHTML = "Submitted request..."
+                apiform.submit();
             }
         </script>
     </body>
