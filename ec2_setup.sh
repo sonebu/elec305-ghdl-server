@@ -21,8 +21,6 @@ source activate ~/venv_p39/
 pip install fastapi jinja2 uvicorn python-multipart aiofiles requests jsonlines
 
 cd ~
-git config --global user.name "sonebu"
-git config --global user.email "buraksoner92@gmail.com"
 git clone https://github.com/ghdl/ghdl.git
 mv ghdl/ ghdl-4.0.0/
 cd ghdl-4.0.0/

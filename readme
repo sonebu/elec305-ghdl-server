@@ -1,25 +1,19 @@
-https://medium.com/@miketobicarter/adding-a-custom-domain-to-your-aws-ec2-instance-and-securing-it-with-https-c39affde4116
-https://medium.com/@mudasirhaji/how-to-configure-nginx-as-a-reverse-proxy-on-aws-ec2-instance-270736ca2a50
-https://medium.com/@m.fareed607/how-to-set-up-an-nginx-reverse-proxy-server-and-enable-https-with-certbot-bbab9feb6338
-https://stackoverflow.com/questions/15335002/nginx-simple-proxy-pass-to-localhost-not-working
+GHDL server for ELEC 305 HWs on VHDL
+====================================
+Live:     https://ghdl.buraksoner.com
+Tutorial: https://ghdl.buraksoner.com/static/elec305_hw_tutorial.webm
 
-(/home/ubuntu/venv_p39) ubuntu@ip-172-31-35-127:~/elec305-ghdl-server$ sudo certbot --nginx -d ghdl.buraksoner.com
-Saving debug log to /var/log/letsencrypt/letsencrypt.log
-Requesting a certificate for ghdl.buraksoner.com
+The test credentials at usercreds.jsonl are not live on the server, please do not abuse them
+Contact me (sonebu) if you want to test this, and I'll provide you credentials. 
 
-Successfully received certificate.
-Certificate is saved at: /etc/letsencrypt/live/ghdl.buraksoner.com/fullchain.pem
-Key is saved at:         /etc/letsencrypt/live/ghdl.buraksoner.com/privkey.pem
-This certificate expires on 2025-01-07.
-These files will be updated when the certificate renews.
-Certbot has set up a scheduled task to automatically renew this certificate in the background.
-
-Deploying certificate
-Successfully deployed certificate for ghdl.buraksoner.com to /etc/nginx/nginx.conf
-Congratulations! You have successfully enabled HTTPS on https://ghdl.buraksoner.com
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-If you like Certbot, please consider supporting our work by:
- * Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
- * Donating to EFF:                    https://eff.org/donate-le
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Notes:
+- HTML + FastAPI server that runs GHDL on the (back-)backend for auto-checking VHDL exercises
+- VHDL syntax highlighting via https://github.com/WebReflection/highlighted-code
+- Last submission saved via client-side localStorage in JS via a listener on DOMContentLoaded
+- Syntax checks as well as functionality checks against testbenches for each question
+- Check your submission states at https://ghdl.buraksoner.com/checksubmissions
+- Not the most efficient web app + interface, but it's simple:
+	 --> every question of every homework is a separate HTML page (templates/)
+	 --> every question of every homework has a VHDL testbench for auto-checks (testbenches/)
+	 --> single python file serves the whole app (server.py)
+	 --> username-password needs to be submitted for every button action
