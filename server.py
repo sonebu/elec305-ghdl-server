@@ -9,8 +9,7 @@ base_url = "https://ghdl.buraksoner.com"
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/testbenches", StaticFiles(directory="testbenches", html = True), name="testbenches")
-app.mount("/duts", StaticFiles(directory="duts", html = True), name="duts")
+app.mount("/content", StaticFiles(directory="content", html = True), name="content")
 templates = Jinja2Templates(directory='templates')
     
 ###################################################################################################################################################################
@@ -112,9 +111,9 @@ def hw1_q1_get(request: Request, password: str = Form(""), username: str = Form(
     return templates.TemplateResponse('hw1_q1.html', context={'request': request, 'input_text': input_text, 'qout': "..."})
 @app.post('/hw1_q1')
 def hw1_q1_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
-    output = handle_dut_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
-                                hw_tag   = 'hw1', question_tag = 'q1', testbench_tag = 'hw1_q1_tb.vhdl', # put it under ./testbenches/
-                                username = username, password = password, input_text = input_text, buttonaction = buttonaction);
+    output = handle_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+                             hw_tag   = 'hw1', question_tag = 'q1', dut_tb_type = "dut", checker_src_tag = 'hw1_q1_tb.vhdl', # put it under ./content/
+                             username = username, password = password, input_text = input_text, buttonaction = buttonaction);
     return templates.TemplateResponse('hw1_q1.html', context={'request': request, 'input_text': input_text, 'qout': output})
 
 @app.get("/hw1_q2")
@@ -122,9 +121,9 @@ def hw1_q2_get(request: Request, password: str = Form(""), username: str = Form(
     return templates.TemplateResponse('hw1_q2.html', context={'request': request, 'input_text': input_text, 'qout': "..."})
 @app.post('/hw1_q2')
 def hw1_q2_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
-    output = handle_dut_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
-                                hw_tag   = 'hw1', question_tag = 'q2', testbench_tag = 'hw1_q2_tb.vhdl', # put it under ./testbenches/
-                                username = username, password = password, input_text = input_text, buttonaction = buttonaction);
+    output = handle_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+                             hw_tag   = 'hw1', question_tag = 'q2', dut_tb_type = "dut", checker_src_tag = 'hw1_q2_tb.vhdl', # put it under ./content/
+                             username = username, password = password, input_text = input_text, buttonaction = buttonaction);
     return templates.TemplateResponse('hw1_q2.html', context={'request': request, 'input_text': input_text, 'qout': output})
 
 @app.get("/hw1_q3")
@@ -132,9 +131,9 @@ def hw1_q3_get(request: Request, password: str = Form(""), username: str = Form(
     return templates.TemplateResponse('hw1_q3.html', context={'request': request, 'input_text': input_text, 'qout': "..."})
 @app.post('/hw1_q3')
 def hw1_q3_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
-    output = handle_dut_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
-                                hw_tag   = 'hw1', question_tag = 'q3', testbench_tag = 'hw1_q3_tb.vhdl', # put it under ./testbenches/
-                                username = username, password = password, input_text = input_text, buttonaction = buttonaction);
+    output = handle_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+                             hw_tag   = 'hw1', question_tag = 'q3', dut_tb_type = "dut", checker_src_tag = 'hw1_q3_tb.vhdl', # put it under ./content/
+                             username = username, password = password, input_text = input_text, buttonaction = buttonaction);
     return templates.TemplateResponse('hw1_q3.html', context={'request': request, 'input_text': input_text, 'qout': output})
 
 @app.get("/hw1_q4")
@@ -142,9 +141,9 @@ def hw1_q4_get(request: Request, password: str = Form(""), username: str = Form(
     return templates.TemplateResponse('hw1_q4.html', context={'request': request, 'input_text': input_text, 'qout': "..."})
 @app.post('/hw1_q4')
 def hw1_q4_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
-    output = handle_dut_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
-                                hw_tag   = 'hw1', question_tag = 'q4', testbench_tag = 'hw1_q4_tb.vhdl', # put it under ./testbenches/
-                                username = username, password = password, input_text = input_text, buttonaction = buttonaction);
+    output = handle_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+                             hw_tag   = 'hw1', question_tag = 'q4', dut_tb_type = "dut", checker_src_tag = 'hw1_q4_tb.vhdl', # put it under ./content/
+                             username = username, password = password, input_text = input_text, buttonaction = buttonaction);
     return templates.TemplateResponse('hw1_q4.html', context={'request': request, 'input_text': input_text, 'qout': output})
 
 @app.get("/hw1_q5")
@@ -153,9 +152,9 @@ def hw1_q5_get(request: Request, password: str = Form(""), username: str = Form(
 
 @app.post('/hw1_q5')
 def hw1_q5_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
-    output = handle_dut_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
-                                hw_tag   = 'hw1', question_tag = 'q5', testbench_tag = 'hw1_q5_tb.vhdl', # put it under ./testbenches/
-                                username = username, password = password, input_text = input_text, buttonaction = buttonaction);
+    output = handle_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+                             hw_tag   = 'hw1', question_tag = 'q5', dut_tb_type = "dut", checker_src_tag = 'hw1_q5_tb.vhdl', # put it under ./content/
+                             username = username, password = password, input_text = input_text, buttonaction = buttonaction);
     return templates.TemplateResponse('hw1_q5.html', context={'request': request, 'input_text': input_text, 'qout': output})
 
 
@@ -168,11 +167,11 @@ def hw2_get(request: Request):
 
 @app.get("/hw2_q1")
 def hw2_q1_get(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
-    wavedrom_listing = run_vcd2wavedrom("./testbenches/hw2_q1_dut_tb_ref_out.vcd", filter_signal_list=["dut_tb.dut_module.signal_in", "dut_tb.dut_module.clk", "dut_tb.dut_module.signal_out",
+    wavedrom_listing = run_vcd2wavedrom("./content/hw2_q1_dut_tb_reftb_out.vcd", filter_signal_list=["dut_tb.dut_module.signal_in", "dut_tb.dut_module.clk", "dut_tb.dut_module.signal_out",
                                                                                                        "dut_tb.signal_in_tb", "dut_tb.clk_tb", "dut_tb.signal_out_tb"])
     ref_waveform_diag_html=f'''
     <div style="background-color:white;display: inline-block;padding: 25px;">
-    <script type="WaveDrom">
+    <script type="WaveDrom" defer>
     {wavedrom_listing}
     </script>
     </div>
@@ -181,10 +180,19 @@ def hw2_q1_get(request: Request, password: str = Form(""), username: str = Form(
 
 @app.post('/hw2_q1')
 def hw2_q1_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
-    output = handle_dut_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
-                                hw_tag   = 'hw2', question_tag = 'q1', testbench_tag = 'hw2_q1_dut.vhdl', # put it under ./duts/
-                                username = username, password = password, input_text = input_text, buttonaction = buttonaction);
-    return templates.TemplateResponse('hw2_q1.html', context={'request': request, 'input_text': input_text, 'qout': output})
+    wavedrom_listing = run_vcd2wavedrom("./content/hw2_q1_dut_tb_reftb_out.vcd", filter_signal_list=["dut_tb.dut_module.signal_in", "dut_tb.dut_module.clk", "dut_tb.dut_module.signal_out",
+                                                                                                       "dut_tb.signal_in_tb", "dut_tb.clk_tb", "dut_tb.signal_out_tb"])
+    ref_waveform_diag_html=f'''
+    <div style="background-color:white;display: inline-block;padding: 25px;">
+    <script type="WaveDrom" defer>
+    {wavedrom_listing}
+    </script>
+    </div>
+    '''
+    output = handle_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+                             hw_tag   = 'hw2', question_tag = 'q1', dut_tb_type = "tb", checker_src_tag = 'hw2_q1_dut_tb_reftb.vhdl',
+                             username = username, password = password, input_text = input_text, buttonaction = buttonaction);
+    return templates.TemplateResponse('hw2_q1.html', context={'request': request, 'input_text': input_text, 'ref_waveform_diag':ref_waveform_diag_html, 'qout': output})
 
 
 
@@ -193,8 +201,9 @@ def hw2_q1_post(request: Request, password: str = Form(""), username: str = Form
 ###
 
 def inputchecks(username, password, input_text):
+    message = '<pre style="background-color:black; color:white; font-family:monospace">'
     if(input_text == ""): # fail case
-        message = "enter a non-empty string in the text box"
+        message += "enter a non-empty string in the text box"
         inputs_healthy = False
     else:
         with jsonlines.open('usercreds.jsonl', 'r') as jsonl_f:
@@ -205,14 +214,15 @@ def inputchecks(username, password, input_text):
                 match_user = True
                 break
         if(not match_user): # fail case
-            message =  "username and password combination not found in database<br>"
+            message +=  "username and password combination not found in database<br>"
             message += "make sure you entered them correctly<br><br>"
             message += "note that the server does not check validity of inputs<br>"
             message += "so you need to check your inputs yourself (e.g., whitespaces)"
             inputs_healthy = False
         else:
             inputs_healthy = True
-            message = ""
+            message += ""
+    message += '</pre>'
     return inputs_healthy, message
 
 def vhdl_syntax_check(submission_foldername, vhdl_filename, submission_id):
@@ -233,7 +243,7 @@ def vhdl_syntax_check(submission_foldername, vhdl_filename, submission_id):
     return output
 
 def dut_functionality_check(submission_foldername, testbench_name, submission_id):
-    shutil.copyfile("./testbenches/" + testbench_name, submission_foldername + testbench_name)
+    shutil.copyfile("./content/" + testbench_name, submission_foldername + testbench_name)
     ghdl_tb_analysis = subprocess.run(['ghdl', '-a', testbench_name], cwd=submission_foldername, stdout=subprocess.PIPE, stderr=subprocess.PIPE) # manually checked, make sure this is OK
     ghdl_tb_run      = subprocess.run(['ghdl', '-r', testbench_name.replace(".vhdl","")], cwd=submission_foldername, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     ghdl_run_result_err = ghdl_tb_run.stderr.decode('utf-8')
@@ -257,7 +267,71 @@ def dut_functionality_check(submission_foldername, testbench_name, submission_id
         simulation_file.write(output)
     return output, submission_correct
 
-def handle_dut_question(timestr, clientIP, hw_tag, question_tag, testbench_tag, username, password, input_text, buttonaction):
+# todo: dut u buraya çekip submit edilen tbyi run edip çıktı wavedrom u almak lazım
+def tb_functionality_check(submission_foldername, hw_tag, question_tag, ref_tb_name, submission_id):
+    dut_name = hw_tag + "_" + question_tag + "_dut.vhdl"
+    shutil.copyfile("./content/" + dut_name   , submission_foldername + dut_name)
+    shutil.copyfile("./solutions/" + ref_tb_name, submission_foldername + ref_tb_name)
+    
+    # run the submitted testbench first and get the wavedrom output
+    ghdl_tb_analysis = subprocess.run(['ghdl', '-a', dut_name], cwd=submission_foldername, stdout=subprocess.PIPE, stderr=subprocess.PIPE) # manually checked, make sure this is OK
+    ghdl_tb_run      = subprocess.run(['ghdl', '-r', 'dut_tb', '--vcd=out.vcd', '--stop-time=300ns'], cwd=submission_foldername, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    ghdl_run_result_err = ghdl_tb_run.stderr.decode('utf-8')
+    ghdl_run_result_out = ghdl_tb_run.stdout.decode('utf-8')
+    output = '<pre style="background-color:black; color:white; font-family:monospace">'
+    if (("error" in ghdl_run_result_out) or (len(ghdl_run_result_err) > 0)):
+        submission_correct = False
+        if(len(ghdl_run_result_out)>0):
+            output += ghdl_run_result_out.replace("\n","<br>").replace('error','<font color="#C01C28"><b>error</b></font>').replace('note','<font color="#2473c7"><b>note</b></font>')
+        if(len(ghdl_run_result_err)>0):
+            output += ghdl_run_result_err
+        output += '<br><font color="#C01C28"><b>Circuit has errors. Try again.</b></font><br>'
+        output += "</pre>"
+    else:
+        output += ghdl_run_result_out.replace("\n","<br>").replace('note','<font color="#2473c7"><b>note</b></font>')
+        output += '<br><font color="#168233">Testbench and DUT run together as intended.</font> See the waveforms from your submission below (cropped to 300 ns):<br><br>'
+        output += "</pre>"
+        submitted_wavedrom_listing = run_vcd2wavedrom(submission_foldername + "out.vcd", filter_signal_list=["dut_tb.dut_module.signal_in", 
+                                                                                                             "dut_tb.dut_module.clk", "dut_tb.dut_module.signal_out",
+                                                                                                             "dut_tb.signal_in_tb", "dut_tb.clk_tb", "dut_tb.signal_out_tb"])
+        waveform_diag_html=f'''
+        <div style="background-color:white;display: inline-block;padding: 25px;">
+        <script type="WaveDrom" defer>
+        {submitted_wavedrom_listing}
+        </script>
+        </div>
+        '''
+        output += waveform_diag_html
+        
+        output += '\n<pre style="background-color:black; color:white; font-family:monospace">'
+        output += '<br>Now running the testbench checker, see the GHDL output for that one below:<br><br></pre>'
+
+        # run the testbench checker (ref_tb)
+        ghdl_tb_analysis = subprocess.run(['ghdl', '-a', ref_tb_name], cwd=submission_foldername, stdout=subprocess.PIPE, stderr=subprocess.PIPE) # manually checked, make sure this is OK
+        ghdl_tb_run      = subprocess.run(['ghdl', '-r', 'reference_tb', '--stop-time=300ns'], cwd=submission_foldername, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        ghdl_run_result_err = ghdl_tb_run.stderr.decode('utf-8')
+        ghdl_run_result_out = ghdl_tb_run.stdout.decode('utf-8')
+        output += '<pre style="background-color:black; color:white; font-family:monospace">'
+        if (("error" in ghdl_run_result_out) or (len(ghdl_run_result_err) > 0)):
+            submission_correct = False
+            if(len(ghdl_run_result_out)>0):
+                output += ghdl_run_result_out.replace("\n","<br>").replace('error','<font color="#C01C28"><b>error</b></font>').replace('note','<font color="#2473c7"><b>note</b></font>')
+            if(len(ghdl_run_result_err)>0):
+                output += ghdl_run_result_err
+            output += '<br><font color="#C01C28"><b>Testbench has errors. Try again.</b></font><br>'
+        else:
+            submission_correct = True
+            output += ghdl_run_result_out.replace("\n","<br>").replace('note','<font color="#2473c7"><b>note</b></font>')
+            output += '<br><font color="#168233"><b>No errors, testbench works as intended.</b></font><br>'
+        output += "</pre>"
+
+    simulation_state = "simOK" if submission_correct else "simERROR"
+    simulationresponse_filename = submission_id + "_" + simulation_state + ".html"
+    with open(submission_foldername + simulationresponse_filename, "w") as simulation_file:
+        simulation_file.write(output)
+    return output, submission_correct
+
+def handle_question(timestr, clientIP, hw_tag, question_tag, dut_tb_type, checker_src_tag, username, password, input_text, buttonaction):
     inputs_healthy, msg = inputchecks(username, password, input_text)
     if(inputs_healthy):
         submission_id         = timestr + "_" + clientIP.replace(".","p") + "_" + hw_tag + "_" + question_tag + "_" + username
@@ -271,10 +345,17 @@ def handle_dut_question(timestr, clientIP, hw_tag, question_tag, testbench_tag, 
 
         if(buttonaction == "Check Syntax"):
             output = vhdl_syntax_check(submission_foldername, vhdl_filename, submission_id)
+            if(output == "No errors."):
+                output = '<pre style="background-color:black; color:white; font-family:monospace"><br><font color="#168233">No syntax errors.</font><br></pre>'
         elif(buttonaction == "Check Functionality"):
             syntax_output = vhdl_syntax_check(submission_foldername, vhdl_filename, submission_id)
             if(syntax_output == "No errors."):
-                output, _ = dut_functionality_check(submission_foldername, testbench_tag, submission_id)
+                if(dut_tb_type == "dut"):
+                    output, _ = dut_functionality_check(submission_foldername, checker_src_tag, submission_id)
+                elif(dut_tb_type == "tb"):
+                    output, _ = tb_functionality_check(submission_foldername, hw_tag, question_tag, checker_src_tag, submission_id)
+                else:
+                    print("somethings wrong, handle_question")
             else:
                 output = syntax_output
         elif(buttonaction == "Submit Answer"):
@@ -296,7 +377,10 @@ def handle_dut_question(timestr, clientIP, hw_tag, question_tag, testbench_tag, 
                 syntax_output = vhdl_syntax_check(submission_foldername, vhdl_filename, submission_id)
                 output = '<pre style="background-color:black; color:white; font-family:monospace">'
                 if(syntax_output == "No errors."):
-                    _, submission_correct = dut_functionality_check(submission_foldername, testbench_tag, submission_id)
+                    if(dut_tb_type == "dut"):
+                        _, submission_correct = dut_functionality_check(submission_foldername, checker_src_tag, submission_id)
+                    elif(dut_tb_type == "tb"):
+                        _, submission_correct = tb_functionality_check(submission_foldername, hw_tag, question_tag, checker_src_tag, submission_id)
                     if(submission_correct):
                         output += 'Submission <font color="#168233"><b>accepted and saved</b></font>, no errors, congratulations &#x1F973;.<br>'
                         output += 'You can still test alternatives with "Check Syntax" and "Check Functionality" if you want to.<br>'
@@ -312,8 +396,8 @@ def handle_dut_question(timestr, clientIP, hw_tag, question_tag, testbench_tag, 
                 with open(hw_q_user_foldername + submissionrecord_filename, "w") as submissionrecord_file:
                     submissionrecord_file.write(submission_state + "\n" + submission_id)
         else:
-            output = "somethings wrong, handle_dut_question"
-            print("somethings wrong, handle_dut_question")
+            output = "somethings wrong, handle_question"
+            print("somethings wrong, handle_question")
     else:
         output = msg
 

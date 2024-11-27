@@ -7,8 +7,8 @@
         <title>Q1 - HW2 - ELEC 305 </title>
         <link id="favicon" rel="icon" type="image/x-icon" href="static/favicon.png">
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/wavedrom/3.1.0/skins/default.js" type="text/javascript"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/wavedrom/3.1.0/wavedrom.min.js" type="text/javascript"></script>
+        <script src="https://ghdl.buraksoner.com/static/wavedromskins/narrow.js" type="text/javascript" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/wavedrom/3.1.0/wavedrom.min.js" type="text/javascript" defer></script>
         <script type="module" defer>
           (async ({ chrome, netscape }) => { if (!chrome && !netscape) await import('https://unpkg.com/@ungap/custom-elements'); 
             const { default: HighlightedCode } = await import('https://unpkg.com/highlighted-code'); HighlightedCode.useTheme('monokai-sublime'); })(self);
@@ -29,7 +29,7 @@
             <hr> <!-- ----------------------------------------------------------------------------------------------------------------------------------------- --> 
             <br>
             
-            <label style="color:white; font-family: monospace;" for="p0"><b>Question 1)</b> You are given <a class="ulink" href="https://ghdl.buraksoner.com/duts/hw2_q1_dut.vhdl" target="_blank">a very simple single-channel VHDL debouncer circuit called "dut"</a>, and you are asked to test it by writing a VHDL testbench for it. 
+            <label style="color:white; font-family: monospace;" for="p0"><b>Question 1)</b> You are given <a class="ulink" href="https://ghdl.buraksoner.com/content/hw2_q1_dut.vhdl" target="_blank">a very simple single-channel VHDL debouncer circuit called "dut"</a>, and you are asked to test it by writing a VHDL testbench for it. 
                 <br>The sequence of inputs that should be given to the circuit is already determined as shown on the waveform diagram below. Your task is to replicate this.
                 <br>The dut should get instantiated as <font color="#2473c7"><b>dut_module</b></font> on your testbench, and your testbench entity name has to be <font color="#2473c7"><b>dut_tb</b></font>. 
                 <br>Each time step in the waveform diagram is 5ns, i.e., the clock period is 10ns.</label>
@@ -44,7 +44,7 @@
             <label style="color:white; font-family: monospace;" for="p3">Your <font color="#2473c7"><b>dut_tb</b></font> VHDL testbench replicating the waveform diagram above:</label><br><br>
 
             <textarea id="input_text_hw1_q1" is="highlighted-code" spellcheck="false" autocorrect="off" autocapitalize="off"
-                      language="vhdl" tab-size="2" name="input_text" style="width: 600px; height: 300px;" value="{{ input_text }}"></textarea>
+                      language="vhdl" tab-size="2" name="input_text" style="width: 1000px; height: 500px;" value="{{ input_text }}"></textarea>
             <br><br>
             <input type="hidden" id="buttonaction" name="buttonaction" value="">
             <input type="submit" name="buttonaction" value="Check Syntax" onclick="setButtonAction('Check Syntax')">&nbsp;&nbsp;&nbsp;&nbsp;
@@ -56,12 +56,10 @@
         <br><br>
         <hr> <!-- ----------------------------------------------------------------------------------------------------------------------------------------- --> 
         
-        <p id="links" style="color:white;">Links to other questions in HW 1</p>
-        <label id="titlepart2" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q2" target="_blank">Question 2</a></label><br>
-        <label id="titlepart3" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q3" target="_blank">Question 3</a></label><br>
-        <label id="titlepart4" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q4" target="_blank">Question 4</a></label><br>
-        <label id="titlepart5" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw1_q5" target="_blank">Question 5</a></label><br>
-        <script>
+        <p id="links" style="color:white;">Links to other questions in HW 2</p>
+        <label id="titlepart2" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw2_q2" target="_blank">Question 2</a></label><br>
+        <label id="titlepart3" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw2_q3" target="_blank">Question 3</a></label><br>
+        <script defer>
             // Load saved data from local storage
             document.addEventListener("DOMContentLoaded", function() {
               const mem_password = localStorage.getItem("password");

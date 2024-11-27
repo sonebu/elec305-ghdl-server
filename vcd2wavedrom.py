@@ -299,6 +299,14 @@ class VCD2Wavedrom:
         if 'hscale' in self.config:
             drom['config']['hscale'] = self.config['hscale']
 
+        # add the tock
+        tickstr = ''
+        for i in range(slots+1):
+            if(i%2==0):
+                tickstr += str(int(i)*5) + ' '
+            else:
+                tickstr += '. '
+        drom['foot'] = {"text":['tspan', 'time (ns)'], "tick":tickstr}
         return drom
 
     def execute(self, auto):
