@@ -3,12 +3,14 @@ from fastapi import FastAPI, Request, Form, status
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
+from vcd2wavedrom import run_vcd2wavedrom
 
 base_url = "https://ghdl.buraksoner.com"
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/testbenches", StaticFiles(directory="testbenches", html = True), name="testbenches")
+app.mount("/duts", StaticFiles(directory="duts", html = True), name="duts")
 templates = Jinja2Templates(directory='templates')
     
 ###################################################################################################################################################################
@@ -16,18 +18,9 @@ templates = Jinja2Templates(directory='templates')
 ###
 
 ### Home: select HW
-class hwChoices(str, enum.Enum):
-    hw1 = "HW1"
-
 @app.get("/")
 def home_get(request: Request):
     return templates.TemplateResponse('home.html', context={'request': request})
-
-@app.post('/')
-def home_post(request: Request, hw_selection: hwChoices = Form(hwChoices)):
-    hw_name = hw_selection.name
-    redirect_url = base_url + "/" + hw_name
-    return RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
 
 ### Check submissions
 @app.get("/checksubmissions")
@@ -38,24 +31,74 @@ def checksubmissions_get(request: Request, password: str = Form(""), username: s
 def checksubmissions_post(request: Request, password: str = Form(""), username: str = Form("")):
     inputs_healthy, msg = inputchecks(username, password, "dummy text")
     if(inputs_healthy):
-        hw1_q1_note = checksubmission_for_hw_q_username(hw_tag = "hw1", question_tag = "q1", username = username);
-        hw1_q2_note = checksubmission_for_hw_q_username(hw_tag = "hw1", question_tag = "q2", username = username);
-        hw1_q3_note = checksubmission_for_hw_q_username(hw_tag = "hw1", question_tag = "q3", username = username);
-        hw1_q4_note = checksubmission_for_hw_q_username(hw_tag = "hw1", question_tag = "q4", username = username);
-        hw1_q5_note = checksubmission_for_hw_q_username(hw_tag = "hw1", question_tag = "q5", username = username);
+        hw1_q1_note, hw1_q2_note, hw1_q3_note, hw1_q4_note, hw1_q5_note = check_hw1_for_user(username);
+        hw2_q1_note, hw2_q2_note, hw2_q3_note = check_hw2_for_user(username);
         output = f"""
 <table>
-<tr> <th></th>          <th>HW1</th></tr>
-<tr> <td><b>Q1</b></td> <td>{hw1_q1_note}</td></tr>
-<tr> <td><b>Q2</b></td> <td>{hw1_q2_note}</td></tr>
-<tr> <td><b>Q3</b></td> <td>{hw1_q3_note}</td></tr>
-<tr> <td><b>Q4</b></td> <td>{hw1_q4_note}</td></tr>
-<tr> <td><b>Q5</b></td> <td>{hw1_q5_note}</td></tr>
+<tr> <th></th>          <th>HW1</th>            <th>HW2</th></tr>
+<tr> <td><b>Q1</b></td> <td>{hw1_q1_note}</td>  <td>{hw2_q1_note}</td> </tr>
+<tr> <td><b>Q2</b></td> <td>{hw1_q2_note}</td>  <td>{hw2_q2_note}</td> </tr>
+<tr> <td><b>Q3</b></td> <td>{hw1_q3_note}</td>  <td>{hw2_q3_note}</td> </tr>
+<tr> <td><b>Q4</b></td> <td>{hw1_q4_note}</td>  <td>{"no hw q"}</td> </tr>
+<tr> <td><b>Q5</b></td> <td>{hw1_q5_note}</td>  <td>{"no hw q"}</td> </tr>
 </table>
 """
     else:
         output = msg
     return templates.TemplateResponse('checksubmissions.html', context={'request': request, 'qout': output})
+
+def check_hw1_for_user(username):
+    hw1_q1_note = checksubmission_for_hw_q_username(hw_tag = "hw1", question_tag = "q1", username = username);
+    hw1_q2_note = checksubmission_for_hw_q_username(hw_tag = "hw1", question_tag = "q2", username = username);
+    hw1_q3_note = checksubmission_for_hw_q_username(hw_tag = "hw1", question_tag = "q3", username = username);
+    hw1_q4_note = checksubmission_for_hw_q_username(hw_tag = "hw1", question_tag = "q4", username = username);
+    hw1_q5_note = checksubmission_for_hw_q_username(hw_tag = "hw1", question_tag = "q5", username = username);    
+    return hw1_q1_note, hw1_q2_note, hw1_q3_note, hw1_q4_note, hw1_q5_note
+
+def check_hw2_for_user(username):
+    hw2_q1_note = checksubmission_for_hw_q_username(hw_tag = "hw2", question_tag = "q1", username = username);
+    hw2_q2_note = checksubmission_for_hw_q_username(hw_tag = "hw2", question_tag = "q2", username = username);
+    hw2_q3_note = checksubmission_for_hw_q_username(hw_tag = "hw2", question_tag = "q3", username = username);
+    return hw2_q1_note, hw2_q2_note, hw2_q3_note
+
+@app.get("/checksubmissions_admin")
+def checksubmissions_admin_get(request: Request, password: str = Form(""), username: str = Form("")):
+    return templates.TemplateResponse('checksubmissions.html', context={'request': request, 'qout': 'Enter admin creds.'})
+
+@app.post("/checksubmissions_admin")
+def checksubmissions_admin_post(request: Request, password: str = Form(""), username: str = Form("")):
+    inputs_healthy, msg = inputchecks(username, password, "dummy text")
+    if(inputs_healthy):
+        with jsonlines.open('usercreds.jsonl', 'r') as jsonl_f:
+            users = [obj for obj in jsonl_f]
+        for userdict in users:
+            if(userdict["username"] == "buraksoner"):
+                adminpwdcheck = userdict["password"]
+                break
+        if((username == "buraksoner") and (password == adminpwdcheck)):
+            output = "" # just init
+            for userdict in users:
+                if (userdict["username"] != "buraksoner"):
+                    hw1_q1_note, hw1_q2_note, hw1_q3_note, hw1_q4_note, hw1_q5_note = check_hw1_for_user(userdict["username"]);
+                    hw2_q1_note, hw2_q2_note, hw2_q3_note = check_hw2_for_user(userdict["username"]);
+                    output += f"""
+<label style="color:white; font-family: monospace;">{userdict["username"] + " submissions:"}</label><br>
+<table>
+<tr> <th></th>          <th>HW1</th>            <th>HW2</th></tr>
+<tr> <td><b>Q1</b></td> <td>{hw1_q1_note}</td>  <td>{hw2_q1_note}</td> </tr>
+<tr> <td><b>Q2</b></td> <td>{hw1_q2_note}</td>  <td>{hw2_q2_note}</td> </tr>
+<tr> <td><b>Q3</b></td> <td>{hw1_q3_note}</td>  <td>{hw2_q3_note}</td> </tr>
+<tr> <td><b>Q4</b></td> <td>{hw1_q4_note}</td>  <td>{"no hw q"}</td> </tr>
+<tr> <td><b>Q5</b></td> <td>{hw1_q5_note}</td>  <td>{"no hw q"}</td> </tr>
+</table><br><br>
+"""
+        else:
+            output = "incorrect admin username-pwd"
+    else:
+        output = msg
+    return templates.TemplateResponse('checksubmissions.html', context={'request': request, 'qout': output})
+
+
 
 ###################################################################################################################################################################
 ### HW1 Routes
@@ -64,65 +107,86 @@ def checksubmissions_post(request: Request, password: str = Form(""), username: 
 def hw1_get(request: Request):
     return templates.TemplateResponse('hw1.html', context={'request': request})
 
-### HW1 - Q1
 @app.get("/hw1_q1")
 def hw1_q1_get(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
     return templates.TemplateResponse('hw1_q1.html', context={'request': request, 'input_text': input_text, 'qout': "..."})
-
 @app.post('/hw1_q1')
 def hw1_q1_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
-    output = handle_hw_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+    output = handle_dut_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
                                 hw_tag   = 'hw1', question_tag = 'q1', testbench_tag = 'hw1_q1_tb.vhdl', # put it under ./testbenches/
                                 username = username, password = password, input_text = input_text, buttonaction = buttonaction);
     return templates.TemplateResponse('hw1_q1.html', context={'request': request, 'input_text': input_text, 'qout': output})
 
-### HW1 - Q2
 @app.get("/hw1_q2")
 def hw1_q2_get(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
     return templates.TemplateResponse('hw1_q2.html', context={'request': request, 'input_text': input_text, 'qout': "..."})
-
 @app.post('/hw1_q2')
 def hw1_q2_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
-    output = handle_hw_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+    output = handle_dut_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
                                 hw_tag   = 'hw1', question_tag = 'q2', testbench_tag = 'hw1_q2_tb.vhdl', # put it under ./testbenches/
                                 username = username, password = password, input_text = input_text, buttonaction = buttonaction);
     return templates.TemplateResponse('hw1_q2.html', context={'request': request, 'input_text': input_text, 'qout': output})
 
-### HW1 - Q3
 @app.get("/hw1_q3")
 def hw1_q3_get(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
     return templates.TemplateResponse('hw1_q3.html', context={'request': request, 'input_text': input_text, 'qout': "..."})
-
 @app.post('/hw1_q3')
 def hw1_q3_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
-    output = handle_hw_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+    output = handle_dut_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
                                 hw_tag   = 'hw1', question_tag = 'q3', testbench_tag = 'hw1_q3_tb.vhdl', # put it under ./testbenches/
                                 username = username, password = password, input_text = input_text, buttonaction = buttonaction);
     return templates.TemplateResponse('hw1_q3.html', context={'request': request, 'input_text': input_text, 'qout': output})
 
-### HW1 - Q4
 @app.get("/hw1_q4")
 def hw1_q4_get(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
     return templates.TemplateResponse('hw1_q4.html', context={'request': request, 'input_text': input_text, 'qout': "..."})
-
 @app.post('/hw1_q4')
 def hw1_q4_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
-    output = handle_hw_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+    output = handle_dut_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
                                 hw_tag   = 'hw1', question_tag = 'q4', testbench_tag = 'hw1_q4_tb.vhdl', # put it under ./testbenches/
                                 username = username, password = password, input_text = input_text, buttonaction = buttonaction);
     return templates.TemplateResponse('hw1_q4.html', context={'request': request, 'input_text': input_text, 'qout': output})
 
-### HW1 - Q5
 @app.get("/hw1_q5")
 def hw1_q5_get(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
     return templates.TemplateResponse('hw1_q5.html', context={'request': request, 'input_text': input_text, 'qout': "..."})
 
 @app.post('/hw1_q5')
 def hw1_q5_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
-    output = handle_hw_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+    output = handle_dut_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
                                 hw_tag   = 'hw1', question_tag = 'q5', testbench_tag = 'hw1_q5_tb.vhdl', # put it under ./testbenches/
                                 username = username, password = password, input_text = input_text, buttonaction = buttonaction);
     return templates.TemplateResponse('hw1_q5.html', context={'request': request, 'input_text': input_text, 'qout': output})
+
+
+###################################################################################################################################################################
+### HW2 Routes
+### 
+@app.get("/hw2")
+def hw2_get(request: Request):
+    return templates.TemplateResponse('hw2.html', context={'request': request})
+
+@app.get("/hw2_q1")
+def hw2_q1_get(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
+    wavedrom_listing = run_vcd2wavedrom("./testbenches/hw2_q1_dut_tb_ref_out.vcd", filter_signal_list=["dut_tb.dut_module.signal_in", "dut_tb.dut_module.clk", "dut_tb.dut_module.signal_out",
+                                                                                                       "dut_tb.signal_in_tb", "dut_tb.clk_tb", "dut_tb.signal_out_tb"])
+    ref_waveform_diag_html=f'''
+    <div style="background-color:white;display: inline-block;padding: 25px;">
+    <script type="WaveDrom">
+    {wavedrom_listing}
+    </script>
+    </div>
+    '''
+    return templates.TemplateResponse('hw2_q1.html', context={'request': request, 'input_text': input_text, 'ref_waveform_diag':ref_waveform_diag_html, 'qout':'...'})
+
+@app.post('/hw2_q1')
+def hw2_q1_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
+    output = handle_dut_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+                                hw_tag   = 'hw2', question_tag = 'q1', testbench_tag = 'hw2_q1_dut.vhdl', # put it under ./duts/
+                                username = username, password = password, input_text = input_text, buttonaction = buttonaction);
+    return templates.TemplateResponse('hw2_q1.html', context={'request': request, 'input_text': input_text, 'qout': output})
+
+
 
 ###################################################################################################################################################################
 ### Helper Functions
@@ -151,7 +215,7 @@ def inputchecks(username, password, input_text):
             message = ""
     return inputs_healthy, message
 
-def syntax_check(submission_foldername, vhdl_filename, submission_id):
+def vhdl_syntax_check(submission_foldername, vhdl_filename, submission_id):
     ghdl_run_result = subprocess.run(['ghdl', '-a', vhdl_filename], cwd=submission_foldername, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     ghdl_run_result_err = ghdl_run_result.stderr.decode('utf-8')
     if(ghdl_run_result_err == ""):
@@ -168,7 +232,7 @@ def syntax_check(submission_foldername, vhdl_filename, submission_id):
         syntax_file.write(output)
     return output
 
-def functionality_check(submission_foldername, testbench_name, submission_id):
+def dut_functionality_check(submission_foldername, testbench_name, submission_id):
     shutil.copyfile("./testbenches/" + testbench_name, submission_foldername + testbench_name)
     ghdl_tb_analysis = subprocess.run(['ghdl', '-a', testbench_name], cwd=submission_foldername, stdout=subprocess.PIPE, stderr=subprocess.PIPE) # manually checked, make sure this is OK
     ghdl_tb_run      = subprocess.run(['ghdl', '-r', testbench_name.replace(".vhdl","")], cwd=submission_foldername, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -193,7 +257,7 @@ def functionality_check(submission_foldername, testbench_name, submission_id):
         simulation_file.write(output)
     return output, submission_correct
 
-def handle_hw_question(timestr, clientIP, hw_tag, question_tag, testbench_tag, username, password, input_text, buttonaction):
+def handle_dut_question(timestr, clientIP, hw_tag, question_tag, testbench_tag, username, password, input_text, buttonaction):
     inputs_healthy, msg = inputchecks(username, password, input_text)
     if(inputs_healthy):
         submission_id         = timestr + "_" + clientIP.replace(".","p") + "_" + hw_tag + "_" + question_tag + "_" + username
@@ -206,11 +270,11 @@ def handle_hw_question(timestr, clientIP, hw_tag, question_tag, testbench_tag, u
             src.write(input_text)
 
         if(buttonaction == "Check Syntax"):
-            output = syntax_check(submission_foldername, vhdl_filename, submission_id)
+            output = vhdl_syntax_check(submission_foldername, vhdl_filename, submission_id)
         elif(buttonaction == "Check Functionality"):
-            syntax_output = syntax_check(submission_foldername, vhdl_filename, submission_id)
+            syntax_output = vhdl_syntax_check(submission_foldername, vhdl_filename, submission_id)
             if(syntax_output == "No errors."):
-                output, _ = functionality_check(submission_foldername, testbench_tag, submission_id)
+                output, _ = dut_functionality_check(submission_foldername, testbench_tag, submission_id)
             else:
                 output = syntax_output
         elif(buttonaction == "Submit Answer"):
@@ -229,10 +293,10 @@ def handle_hw_question(timestr, clientIP, hw_tag, question_tag, testbench_tag, u
                 output += 'Double-check your submission status from: <a class="ulink" href="https://ghdl.buraksoner.com/checksubmissions" target="_blank">https://ghdl.buraksoner.com/checksubmissions</a><br>'
                 output += "</pre>"
             else:
-                syntax_output = syntax_check(submission_foldername, vhdl_filename, submission_id)
+                syntax_output = vhdl_syntax_check(submission_foldername, vhdl_filename, submission_id)
                 output = '<pre style="background-color:black; color:white; font-family:monospace">'
                 if(syntax_output == "No errors."):
-                    _, submission_correct = functionality_check(submission_foldername, testbench_tag, submission_id)
+                    _, submission_correct = dut_functionality_check(submission_foldername, testbench_tag, submission_id)
                     if(submission_correct):
                         output += 'Submission <font color="#168233"><b>accepted and saved</b></font>, no errors, congratulations &#x1F973;.<br>'
                         output += 'You can still test alternatives with "Check Syntax" and "Check Functionality" if you want to.<br>'
@@ -248,8 +312,8 @@ def handle_hw_question(timestr, clientIP, hw_tag, question_tag, testbench_tag, u
                 with open(hw_q_user_foldername + submissionrecord_filename, "w") as submissionrecord_file:
                     submissionrecord_file.write(submission_state + "\n" + submission_id)
         else:
-            output = "somethings wrong, handle_hw_question"
-            print("somethings wrong, handle_hw_question")
+            output = "somethings wrong, handle_dut_question"
+            print("somethings wrong, handle_dut_question")
     else:
         output = msg
 
