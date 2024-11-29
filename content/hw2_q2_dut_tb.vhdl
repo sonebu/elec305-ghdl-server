@@ -1,8 +1,8 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-entity dut_tb is
-end dut_tb;
-architecture Behavioral of dut_tb is
+entity hw2_q2_dut_tb is
+end hw2_q2_dut_tb;
+architecture Behavioral of hw2_q2_dut_tb is
     component dut
         Generic ( param : integer);
         Port ( signal_in : in  std_logic;
@@ -34,30 +34,30 @@ begin
         enable_tb <= '0';
         signal_in_tb <= '0';
         wait for 10 ns; -- 15ns
-        assert signal_in_tb = signal_out_tb report "Should have gotten signal_in_tb = signal_out_tb by now, but it didn't happen" severity failure;
+        assert signal_in_tb = signal_out_tb report "Should have gotten signal_in_tb = signal_out_tb by now, but it didn't happen" severity error;
         wait for 40 ns; -- 55ns
         signal_in_tb <= '1';
         wait for 10 ns; -- 65ns
-        assert signal_in_tb = signal_out_tb report "Should have gotten signal_in_tb = signal_out_tb by now, but it didn't happen" severity failure;
+        assert signal_in_tb = signal_out_tb report "Should have gotten signal_in_tb = signal_out_tb by now, but it didn't happen" severity error;
         wait for 40 ns; -- 105ns
         signal_in_tb <= '0';
         wait for 10 ns; -- 115ns
-        assert signal_in_tb = signal_out_tb report "Should have gotten signal_in_tb = signal_out_tb by now, but it didn't happen" severity failure;
+        assert signal_in_tb = signal_out_tb report "Should have gotten signal_in_tb = signal_out_tb by now, but it didn't happen" severity error;
         wait for 40 ns; -- 155ns
         enable_tb <= '1';
         signal_in_tb <= '1'; 
         wait for 10 ns; -- 165ns
-        assert signal_out_tb = '0' report "Should have gotten signal_out_tb = 0 by now, but it didn't happen" severity failure;
+        assert signal_out_tb = '0' report "Should have gotten signal_out_tb = 0 by now, but it didn't happen" severity error;
         signal_in_tb <= '0'; 
         wait for 10 ns; -- 175ns 
-        assert signal_out_tb = '0' report "Should have gotten signal_out_tb = 0 by now, but it didn't happen" severity failure;
+        assert signal_out_tb = '0' report "Should have gotten signal_out_tb = 0 by now, but it didn't happen" severity error;
         signal_in_tb <= '1';
         wait for 55 ns; -- 230ns
-        assert signal_out_tb = '1' report "Should have gotten signal_out_tb = 1 by now, but it didn't happen" severity failure;
+        assert signal_out_tb = '1' report "Should have gotten signal_out_tb = 1 by now, but it didn't happen" severity error;
         wait for 5 ns; -- 235ns
         signal_in_tb <= '0';
         wait for 55 ns; -- 290ns
-        assert signal_out_tb = '0' report "Should have gotten signal_out_tb = 0 by now, but it didn't happen" severity failure;
+        assert signal_out_tb = '0' report "Should have gotten signal_out_tb = 0 by now, but it didn't happen" severity error;
         wait for 5 ns; -- 295ns
         wait;
     end process;

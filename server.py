@@ -196,7 +196,7 @@ def hw2_q1_post(request: Request, password: str = Form(""), username: str = Form
 
 @app.get("/hw2_q2")
 def hw2_q2_get(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
-    wavedrom_listing = run_vcd2wavedrom("./content/hw2_q2_dut_tb_out.vcd", filter_signal_list=["dut_tb.dut_module.signal_in", "dut_tb.dut_module.clk", 
+    wavedrom_listing = run_vcd2wavedrom("./content/hw2_q2_dut_tb_refout.vcd", filter_signal_list=["dut_tb.dut_module.signal_in", "dut_tb.dut_module.clk", 
                                                                                                "dut_tb.dut_module.enable", "dut_tb.dut_module.signal_out"])
     ref_waveform_diag_html=f'''
     <div style="background-color:white;display: inline-block;padding: 25px;">
@@ -222,6 +222,33 @@ def hw2_q2_post(request: Request, password: str = Form(""), username: str = Form
                              hw_tag   = 'hw2', question_tag = 'q2', dut_tb_type = "dut", checker_src_tag = 'hw2_q2_dut_tb.vhdl',
                              username = username, password = password, input_text = input_text, buttonaction = buttonaction, dut_withwavedrom=True);
     return templates.TemplateResponse('hw2_q2.html', context={'request': request, 'input_text': input_text, 'ref_waveform_diag':ref_waveform_diag_html, 'qout': output})
+
+@app.get("/hw2_q3")
+def hw2_q3_get(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
+    wavedrom_listing = run_vcd2wavedrom("./content/hw2_q3_dut_tb_refout.vcd", filter_signal_list=["hw2_q3_dut_tb.dut_module.signal_in", "hw2_q3_dut_tb.dut_module.clk", "hw2_q3_dut_tb.dut_module.signal_out"])
+    ref_waveform_diag_html=f'''
+    <div style="background-color:white;display: inline-block;padding: 25px;">
+    <script type="WaveDrom" defer>
+    {wavedrom_listing}
+    </script>
+    </div>
+    '''
+    return templates.TemplateResponse('hw2_q3.html', context={'request': request, 'input_text': input_text, 'ref_waveform_diag':ref_waveform_diag_html, 'qout':'...'})
+
+@app.post('/hw2_q3')
+def hw2_q3_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
+    wavedrom_listing = run_vcd2wavedrom("./content/hw2_q3_dut_tb_refout.vcd", filter_signal_list=["hw2_q3_dut_tb.dut_module.signal_in", "hw2_q3_dut_tb.dut_module.clk", "hw2_q3_dut_tb.dut_module.signal_out"])
+    ref_waveform_diag_html=f'''
+    <div style="background-color:white;display: inline-block;padding: 25px;">
+    <script type="WaveDrom" defer>
+    {wavedrom_listing}
+    </script>
+    </div>
+    '''
+    output = handle_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+                             hw_tag   = 'hw2', question_tag = 'q3', dut_tb_type = "dut", checker_src_tag = 'hw2_q3_dut_tb.vhdl',
+                             username = username, password = password, input_text = input_text, buttonaction = buttonaction, dut_withwavedrom=True);
+    return templates.TemplateResponse('hw2_q3.html', context={'request': request, 'input_text': input_text, 'ref_waveform_diag':ref_waveform_diag_html, 'qout': output})
 
 ###################################################################################################################################################################
 ### Helper Functions
@@ -287,21 +314,25 @@ def dut_functionality_check(submission_foldername, testbench_name, submission_id
             output += ghdl_run_result_err
         output += '<br><font color="#C01C28"><b>Circuit has errors. Try again.</b></font><br>'
     else:
-        print("std: ", ghdl_run_result_out)
-        print("err: ", ghdl_run_result_err)
-        #if ("failure" in ghdl_run_result_out):
-        #    submission_correct = False
-        #    if(len(ghdl_run_result_out)>0):
-        #        output += ghdl_run_result_out.replace("\n","<br>").replace('failure','<font color="#C01C28"><b>failure</b></font>').replace('note','<font color="#2473c7"><b>note</b></font>')
-        #    if(len(ghdl_run_result_err)>0):
-        #        output += ghdl_run_result_err
-        #    output += '<br><font color="#C01C28"><b>Circuit has errors. Try again.</b></font><br>'
-        #else:
-        #    submission_correct = True
-
+        submission_correct = True
         output += ghdl_run_result_out.replace("\n","<br>").replace('note','<font color="#2473c7"><b>note</b></font>')
         output += '<br><font color="#168233"><b>No errors, circuit works as intended.</b></font><br>'
     output += "</pre>"
+    if(dut_withwavedrom):
+        try:
+            output += '<label style="background-color:black; color:white; font-family:monospace"><br>See the waveforms from your submission below (cropped to 300 ns):<br><br></label>'
+            submitted_wavedrom_listing = run_vcd2wavedrom(submission_foldername + "out.vcd", filter_signal_list=["__all__"])
+            waveform_diag_html=f'''
+            <div style="background-color:white;display: inline-block;padding: 25px;">
+            <script type="WaveDrom" defer>
+            {submitted_wavedrom_listing}
+            </script>
+            </div>
+            '''
+            output += waveform_diag_html
+        except:
+            output += '<label style="background-color:black; color:#C01C28; font-family:monospace"><br>Waveform could not be rendered due to errors in circuit.<br></label>'
+
     simulation_state = "simOK" if submission_correct else "simERROR"
     simulationresponse_filename = submission_id + "_" + simulation_state + ".html"
     with open(submission_foldername + simulationresponse_filename, "w") as simulation_file:

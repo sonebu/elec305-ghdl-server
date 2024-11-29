@@ -4,7 +4,7 @@
         <style type="text/css">a, a:visited{color: lightskyblue;}</style>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Q2 - HW2 - ELEC 305 </title>
+        <title>Q3 - HW2 - ELEC 305 </title>
         <link id="favicon" rel="icon" type="image/x-icon" href="static/favicon.png">
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
         <script src="https://ghdl.buraksoner.com/static/wavedromskins/narrow.js" type="text/javascript" defer></script>
@@ -19,7 +19,7 @@
         </style>
    </head>
     <body style="background-color:black;margin-top:20px;margin-left:20px" onload="WaveDrom.ProcessAll()">
-        <p id="titlepart" style="color:white; font-size:20px;">HW2 - Q2 - ELEC 305</p>
+        <p id="titlepart" style="color:white; font-size:20px;">HW2 - Q3 - ELEC 305</p>
         <p id="explnpart" style="color:white; font-family: monospace;">Please enter your username and password below before submitting.</p><br>
         <form id="qform" onsubmit="submitform(event)" method="post">
             <label style="color:white; font-family: monospace;" for="username">ELEC 305 username:</label> <input type="text" id="username" name="username"><br>
@@ -29,9 +29,11 @@
             <hr> <!-- ----------------------------------------------------------------------------------------------------------------------------------------- --> 
             <br>
             
-            <label style="color:white; font-family: monospace;" for="p0"><b>Question 2)</b> Follow-up on Question 1, you are now tasked with adding an "enable" function to the <a class="ulink" href="https://ghdl.buraksoner.com/content/hw2_q1_dut.vhdl" target="_blank">debouncer</a>. 
-                <br>You can check the server testbench for this question at <a class="ulink" href="https://ghdl.buraksoner.com/content/hw2_q2_dut_tb.vhdl" target="_blank">content/hw2_q2_dut_tb.vhdl</a>.
-                <br>The dut name should stay the same as the original circuit, and the new enable functionality should be used over a 1-bit std_logic port called <font color="#2473c7"><b>enable</b></font>. 
+            <label style="color:white; font-family: monospace;" for="p0"><b>Question 3)</b> Follow-up on Question 2, you are now tasked with adding a separate debouncing timer for the 0->1 transition and the 1->0 transition to the <a class="ulink" href="https://ghdl.buraksoner.com/content/hw2_q1_dut.vhdl" target="_blank">original debouncer circuit</a>. 
+                <br>Rename the previous generic <font color="#2473c7"><b>param</b></font> to <font color="#2473c7"><b>param_up</b></font> to use it for 0->1 transition, and add a separate generic named <font color="#2473c7"><b>param_down</b></font> for the 1->0 transition.
+                <br>Note that your task is to modify the original circuit, not the one you built in Q2 with the enable functionality 
+                <br>(i.e., your circuit should not have an enable port, keep the same ports as in the original dut in the link above).
+                <br>You can check the server testbench for this question at <a class="ulink" href="https://ghdl.buraksoner.com/content/hw2_q3_dut_tb.vhdl" target="_blank">content/hw2_q3_dut_tb.vhdl</a>.<br>
                 <br>A correct implementation would render the following timing diagram:</label>
             <br><br>
             {{ ref_waveform_diag | safe }}
@@ -53,7 +55,7 @@
         
         <p id="links" style="color:white;">Links to other questions in HW 2</p>
         <label id="titlepart2" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw2_q1" target="_blank">Question 1</a></label><br>
-        <label id="titlepart3" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw2_q3" target="_blank">Question 3</a></label><br>
+        <label id="titlepart3" style="color:white;">- <a class="ulink" href="https://ghdl.buraksoner.com/hw2_q2" target="_blank">Question 2</a></label><br>
         <script defer>
             // Load saved data from local storage
             document.addEventListener("DOMContentLoaded", function() {
