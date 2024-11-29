@@ -168,7 +168,7 @@ def hw2_get(request: Request):
 @app.get("/hw2_q1")
 def hw2_q1_get(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
     wavedrom_listing = run_vcd2wavedrom("./content/hw2_q1_dut_tb_reftb_out.vcd", filter_signal_list=["dut_tb.dut_module.signal_in", "dut_tb.dut_module.clk", "dut_tb.dut_module.signal_out",
-                                                                                                       "dut_tb.signal_in_tb", "dut_tb.clk_tb", "dut_tb.signal_out_tb"])
+                                                                                                     "dut_tb.signal_in_tb", "dut_tb.clk_tb", "dut_tb.signal_out_tb"])
     ref_waveform_diag_html=f'''
     <div style="background-color:white;display: inline-block;padding: 25px;">
     <script type="WaveDrom" defer>
@@ -181,7 +181,7 @@ def hw2_q1_get(request: Request, password: str = Form(""), username: str = Form(
 @app.post('/hw2_q1')
 def hw2_q1_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
     wavedrom_listing = run_vcd2wavedrom("./content/hw2_q1_dut_tb_reftb_out.vcd", filter_signal_list=["dut_tb.dut_module.signal_in", "dut_tb.dut_module.clk", "dut_tb.dut_module.signal_out",
-                                                                                                       "dut_tb.signal_in_tb", "dut_tb.clk_tb", "dut_tb.signal_out_tb"])
+                                                                                                     "dut_tb.signal_in_tb", "dut_tb.clk_tb", "dut_tb.signal_out_tb"])
     ref_waveform_diag_html=f'''
     <div style="background-color:white;display: inline-block;padding: 25px;">
     <script type="WaveDrom" defer>
@@ -194,7 +194,34 @@ def hw2_q1_post(request: Request, password: str = Form(""), username: str = Form
                              username = username, password = password, input_text = input_text, buttonaction = buttonaction);
     return templates.TemplateResponse('hw2_q1.html', context={'request': request, 'input_text': input_text, 'ref_waveform_diag':ref_waveform_diag_html, 'qout': output})
 
+@app.get("/hw2_q2")
+def hw2_q2_get(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
+    wavedrom_listing = run_vcd2wavedrom("./content/hw2_q2_dut_tb_out.vcd", filter_signal_list=["dut_tb.dut_module.signal_in", "dut_tb.dut_module.clk", 
+                                                                                               "dut_tb.dut_module.enable", "dut_tb.dut_module.signal_out"])
+    ref_waveform_diag_html=f'''
+    <div style="background-color:white;display: inline-block;padding: 25px;">
+    <script type="WaveDrom" defer>
+    {wavedrom_listing}
+    </script>
+    </div>
+    '''
+    return templates.TemplateResponse('hw2_q2.html', context={'request': request, 'input_text': input_text, 'ref_waveform_diag':ref_waveform_diag_html, 'qout':'...'})
 
+@app.post('/hw2_q2')
+def hw2_q2_post(request: Request, password: str = Form(""), username: str = Form(""), input_text: str = Form(""), buttonaction: str = Form("")):
+    wavedrom_listing = run_vcd2wavedrom("./content/hw2_q2_dut_tb_refout.vcd", filter_signal_list=["dut_tb.dut_module.signal_in", "dut_tb.dut_module.clk", 
+                                                                                                  "dut_tb.dut_module.enable", "dut_tb.dut_module.signal_out"])
+    ref_waveform_diag_html=f'''
+    <div style="background-color:white;display: inline-block;padding: 25px;">
+    <script type="WaveDrom" defer>
+    {wavedrom_listing}
+    </script>
+    </div>
+    '''
+    output = handle_question(timestr  = time.strftime("%Y%m%d_%H%M%S"), clientIP = request.client.host, 
+                             hw_tag   = 'hw2', question_tag = 'q2', dut_tb_type = "dut", checker_src_tag = 'hw2_q2_dut_tb.vhdl',
+                             username = username, password = password, input_text = input_text, buttonaction = buttonaction, dut_withwavedrom=True);
+    return templates.TemplateResponse('hw2_q2.html', context={'request': request, 'input_text': input_text, 'ref_waveform_diag':ref_waveform_diag_html, 'qout': output})
 
 ###################################################################################################################################################################
 ### Helper Functions
@@ -242,10 +269,13 @@ def vhdl_syntax_check(submission_foldername, vhdl_filename, submission_id):
         syntax_file.write(output)
     return output
 
-def dut_functionality_check(submission_foldername, testbench_name, submission_id):
+def dut_functionality_check(submission_foldername, testbench_name, submission_id, dut_withwavedrom=False):
     shutil.copyfile("./content/" + testbench_name, submission_foldername + testbench_name)
     ghdl_tb_analysis = subprocess.run(['ghdl', '-a', testbench_name], cwd=submission_foldername, stdout=subprocess.PIPE, stderr=subprocess.PIPE) # manually checked, make sure this is OK
-    ghdl_tb_run      = subprocess.run(['ghdl', '-r', testbench_name.replace(".vhdl","")], cwd=submission_foldername, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if(dut_withwavedrom):
+        ghdl_tb_run  = subprocess.run(['ghdl', '-r', testbench_name.replace(".vhdl",""), '--vcd=out.vcd', '--stop-time=300ns'], cwd=submission_foldername, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    else:
+        ghdl_tb_run  = subprocess.run(['ghdl', '-r', testbench_name.replace(".vhdl","")], cwd=submission_foldername, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     ghdl_run_result_err = ghdl_tb_run.stderr.decode('utf-8')
     ghdl_run_result_out = ghdl_tb_run.stdout.decode('utf-8')
     output = '<pre style="background-color:black; color:white; font-family:monospace">'
@@ -257,7 +287,18 @@ def dut_functionality_check(submission_foldername, testbench_name, submission_id
             output += ghdl_run_result_err
         output += '<br><font color="#C01C28"><b>Circuit has errors. Try again.</b></font><br>'
     else:
-        submission_correct = True
+        print("std: ", ghdl_run_result_out)
+        print("err: ", ghdl_run_result_err)
+        #if ("failure" in ghdl_run_result_out):
+        #    submission_correct = False
+        #    if(len(ghdl_run_result_out)>0):
+        #        output += ghdl_run_result_out.replace("\n","<br>").replace('failure','<font color="#C01C28"><b>failure</b></font>').replace('note','<font color="#2473c7"><b>note</b></font>')
+        #    if(len(ghdl_run_result_err)>0):
+        #        output += ghdl_run_result_err
+        #    output += '<br><font color="#C01C28"><b>Circuit has errors. Try again.</b></font><br>'
+        #else:
+        #    submission_correct = True
+
         output += ghdl_run_result_out.replace("\n","<br>").replace('note','<font color="#2473c7"><b>note</b></font>')
         output += '<br><font color="#168233"><b>No errors, circuit works as intended.</b></font><br>'
     output += "</pre>"
@@ -331,7 +372,7 @@ def tb_functionality_check(submission_foldername, hw_tag, question_tag, ref_tb_n
         simulation_file.write(output)
     return output, submission_correct
 
-def handle_question(timestr, clientIP, hw_tag, question_tag, dut_tb_type, checker_src_tag, username, password, input_text, buttonaction):
+def handle_question(timestr, clientIP, hw_tag, question_tag, dut_tb_type, checker_src_tag, username, password, input_text, buttonaction, dut_withwavedrom=False):
     inputs_healthy, msg = inputchecks(username, password, input_text)
     if(inputs_healthy):
         submission_id         = timestr + "_" + clientIP.replace(".","p") + "_" + hw_tag + "_" + question_tag + "_" + username
@@ -351,7 +392,7 @@ def handle_question(timestr, clientIP, hw_tag, question_tag, dut_tb_type, checke
             syntax_output = vhdl_syntax_check(submission_foldername, vhdl_filename, submission_id)
             if(syntax_output == "No errors."):
                 if(dut_tb_type == "dut"):
-                    output, _ = dut_functionality_check(submission_foldername, checker_src_tag, submission_id)
+                    output, _ = dut_functionality_check(submission_foldername, checker_src_tag, submission_id, dut_withwavedrom)
                 elif(dut_tb_type == "tb"):
                     output, _ = tb_functionality_check(submission_foldername, hw_tag, question_tag, checker_src_tag, submission_id)
                 else:
@@ -378,7 +419,7 @@ def handle_question(timestr, clientIP, hw_tag, question_tag, dut_tb_type, checke
                 output = '<pre style="background-color:black; color:white; font-family:monospace">'
                 if(syntax_output == "No errors."):
                     if(dut_tb_type == "dut"):
-                        _, submission_correct = dut_functionality_check(submission_foldername, checker_src_tag, submission_id)
+                        _, submission_correct = dut_functionality_check(submission_foldername, checker_src_tag, submission_id, dut_withwavedrom)
                     elif(dut_tb_type == "tb"):
                         _, submission_correct = tb_functionality_check(submission_foldername, hw_tag, question_tag, checker_src_tag, submission_id)
                     if(submission_correct):
